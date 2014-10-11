@@ -1,6 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Core.EntityClient;
+using System.Data.SqlClient;
+using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web.Configuration;
+using TemporaryCoffin.Models.DbModel;
+using TemporaryCoffin.Models.DbModel.DbData;
+using TemporaryCoffin.Models.ValueObject;
 
 namespace TemporaryCoffin.Utils
 {
@@ -10,11 +19,9 @@ namespace TemporaryCoffin.Utils
     public class Utilities
     {
         #region Classvars
-
+        private static readonly LogFactoryManager LogManager = LogFactoryManager.GetInstance();
         private static Utilities _instance;
         private static EntityConnectionStringBuilder _sqlConnection;
-        
-        
 
         #endregion
 
@@ -37,141 +44,317 @@ namespace TemporaryCoffin.Utils
         }
 
         #endregion
-        #region VerificacaoUser
-        #region Userverification
+        
+        #region ConnectionStringData
+
         /// <summary>
-        /// Metodo para verificar se existem items em cache e/ou retirar quer cache ou db
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public  EntityConnectionStringBuilder GetSqlConfigData()
+        {
+            var resultado = new EntityConnectionStringBuilder();
+            //var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            var config = WebConfigurationManager.OpenWebConfiguration("~");
+            var connString = config.ConnectionStrings.ConnectionStrings["DbConnection"].ConnectionString;
+            var sqlbuilder = new SqlConnectionStringBuilder(connString);
+            resultado.Metadata = @"res://*/";
+            resultado.Provider = "System.Data.SqlClient";
+            resultado.ProviderConnectionString = sqlbuilder.ToString();
+            return resultado;
+        }
+
+       
+        
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public EntityConnectionStringBuilder DevolveConnection()
+        {
+            return _sqlConnection ?? (_sqlConnection = GetSqlConfigData());
+        }
+
+        #endregion
+
+        
+        #region BusRegisterInformation
+        /// <summary>
+        /// regista a informacao dos dados recebidos do bus para a base de dados
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public bool IsUserValid(string value)
+        public async Task<string> RegisterBusInfo(InfoDataBusVo value)
         {
-            if (_tmplistaTiposPedidos == null)
+            try
             {
-                if (CheckCache())
+                using (var conn = new TemporaryCoffinModel(DevolveConnection().ProviderConnectionString))
                 {
-                    _tmpListaUsers = ExtractFromCache();
+                    conn.DadosBus.Add(new BusDataInformation
+                    {
+                        ID = Guid.NewGuid(),
+                        DataHora = DateTime.UtcNow,
+                        Latitude = value.Latitude,
+                        Longitude = value.Longitude
+                    });
+
+                    await conn.SaveChangesAsync();
+                    
+                }
+            }
+            catch (Exception e)
+            {
+               
+                if (e.InnerException != null)
+                {
+                    LogManager.WriteError(1000, "Erro TC RegBusInfo: \n " + e.InnerException + "\n " + e.Message);
                 }
                 else
                 {
-                    var tmpGetfromDb = ExtractFromDb();
-                    _tmpListaUsers = tmpGetfromDb;
+                    LogManager.WriteError(1000, "Erro TC RegBusInfo:\n " + e.Message);
                 }
-
-
+                return "NOK";
             }
-
-            if (_tmpListaUsers.Any())
-            {
-                InjectIntoCache(_tmpListaUsers);
-            }
-
-            return CheckValidKey(value);
+            return "OK";
         }
+        #endregion
+
+        #region registoDadosParagem
         /// <summary>
-        /// metodo para verificar se a chave e valida
+        /// metodo para registar os dados da paragem
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        private static bool CheckValidKey(string value)
+        public async Task<string> RegisterStop(InfoDataBusVo value)
         {
 
-            var tmpQuery = (from t in _tmpListaUsers
-                            where t.ApiKey == Guid.Parse(value) && t.IsValid
-                            select t.IdUser).SingleOrDefault();
-
-            return tmpQuery.ToString() != "00000000-0000-0000-0000-000000000000" && string.IsNullOrEmpty(tmpQuery.ToString());
-        }
-
-
-        /// <summary>
-        /// metodo para verificar se os items estao dentro da cache
-        /// </summary>
-        /// <returns></returns>
-        private static bool CheckCache()
-        {
-            // after appfabric
-            //var tmpLista = (List<CSortUser>) Cache.Get("default");
-            // return tmpLista != null && tmpLista.Any();
-            //
-
-
-            return false;
-
-        }
-
-        /// <summary>
-        /// metodo para efectuar a extraccao dos dados da cache
-        /// </summary>
-        /// <returns>List of CsortUser</returns>
-        private static List<CSortUser> ExtractFromCache()
-        {
-
-            if (_tmpListaUsers != null && _tmpListaUsers.Any())
-            {
-                _tmpListaUsers.Clear();
-
-            }
-
-            return new List<CSortUser>();
-            // after appfabric
-            // return (List<CSortUser>)Cache.Get("default");
-            //
-        }
-
-        /// <summary>
-        /// Metodo para extrair os dados da base dados
-        /// </summary>
-        /// <returns></returns>
-        private static List<Utilizadores> ExtractFromDb()
-        {
-            var resultado = new List<Utilizadores>();
             try
             {
-                using (var tmp = new RequestDbContext(GetAuthConnection().ProviderConnectionString))
+                using (var tmp= new TemporaryCoffinModel(GetSqlConfigData().ProviderConnectionString))
                 {
-                    try
+
+                    var tmpdataLinha =await (from t in tmp.DadosLinha
+                        select t.ID).FirstOrDefaultAsync();
+
+                    if (!string.IsNullOrEmpty(tmpdataLinha.ToString()))
                     {
-
-                        tmp.Configuration.AutoDetectChangesEnabled = false;
-
-
-                        var tmpQuery = (from t in tmp.DadosUsers
-                                        select t).ToList();
-
-                        if (tmpQuery.Any())
+                        tmp.DadosParagens.Add(new Paragens
                         {
-                            resultado = tmpQuery;
-                        }
-
-
-
+                            ID = Guid.NewGuid(),
+                            NomeParagem = value.NomeParagem,
+                            latitude = value.Latitude,
+                            longitude = value.Longitude,
+                            IdLinha = tmpdataLinha
+                        });   
                     }
-                    finally
+                    else
                     {
-                        tmp.Configuration.AutoDetectChangesEnabled = true;
+                        return "SEMROTA";
                     }
+                    
                 }
             }
             catch (Exception e)
             {
                 if (e.InnerException != null)
                 {
-                    //LogManager.WriteError(1000, "Erro ExtractFromDb: \n " + e.InnerException + "\n " + e.Message);
+                    LogManager.WriteError(1000, "Erro TC RegBusStop: \n " + e.InnerException + "\n " + e.Message);
                 }
                 else
                 {
-                    //LogManager.WriteError(1000, "Erro ExtractFromDb:\n " + e.Message);
+                    LogManager.WriteError(1000, "Erro TC RegBusStop:\n " + e.Message);
                 }
-
+                return "NOK";  
+                 
             }
-            return resultado;
+            return "OK";
         }
 
-       
         #endregion
+        
+        #region RegistoInfoLinha
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public async Task<string> RegistaLinha(InfoLinhaVo value)
+        {
+            try
+            {
+                using (var tmp = new TemporaryCoffinModel(GetSqlConfigData().ProviderConnectionString))
+                {
+
+                    tmp.DadosLinha.Add(new Linha
+                    {
+                        ID = Guid.NewGuid(),
+                        LatFim = value.LatFim,
+                        LatInicio = value.LatInicio,
+                        LongFim = value.LongFim,
+                        LongInicio = value.LongInicio,
+                        NomeLinha = value.NomeLinha
+                    });
+
+                    await tmp.SaveChangesAsync();
+                }
+            }
+            catch (Exception e)
+            {
+
+                if (e.InnerException != null)
+                {
+                    LogManager.WriteError(1000, "Erro TC RegLinha: \n " + e.InnerException + "\n " + e.Message);
+                }
+                else
+                {
+                    LogManager.WriteError(1000, "Erro TC RegLinha:\n " + e.Message);
+                }
+                return "NOK";
+                
+                
+            }
+            return "OK";
+        }
         #endregion
 
 
+
+        #region ObtemDadosMedia
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public async Task<DataResponseVo> GetLastPosBus(RequestVO value)
+        {
+            try
+            {
+                using (var _tmpconn = new TemporaryCoffinModel(GetSqlConfigData().ProviderConnectionString))
+                {
+                    try
+                    {
+                        _tmpconn.Configuration.AutoDetectChangesEnabled = false;
+                        var tmpquery = await (from t in _tmpconn.DadosBus
+                            where t.Longitude <= value.Longitude
+                                  && t.Latitude <= value.Latitude
+                                  && t.DataHora == Convert.ToDateTime(value.DataHora)
+                            select t).ToListAsync();
+
+
+                        if (!tmpquery.Any())
+                        {
+                            return new DataResponseVo
+                            {
+                                ResponseMessage = "NoBus"
+                            };
+                        }
+
+                        var resultado = new DataResponseVo
+                        {
+                            ResponseMessage = "BusFound",
+                            ListaPontos = new List<CoordinatesVo>(),
+                            TimeAvg = 0
+                        };
+
+                        resultado.TimeAvg = await GetMediaDatas(value);
+                        foreach (var item in tmpquery)
+                        {
+                            resultado.ListaPontos.Add(new CoordinatesVo
+                            {
+                                ID = item.ID.ToString(),
+                                LatPos = item.Latitude,
+                                LongPos = item.Longitude
+                            });
+                        }
+
+
+                    }
+                    finally
+                    {
+                        _tmpconn.Configuration.AutoDetectChangesEnabled = true;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+
+                if (e.InnerException != null)
+                {
+                    LogManager.WriteError(1000, "Erro TC GetLastBuspos: \n " + e.InnerException + "\n " + e.Message);
+                }
+                else
+                {
+                    LogManager.WriteError(1000, "Erro TC GetLastBuspos:\n " + e.Message);
+                }
+            }
+            return null;
+        } 
+        #endregion
+        #region Calculo Medias
+
+        private async Task<double> GetMediaDatas(RequestVO value)
+        {
+            var resultado = 0.0;
+            try
+            {
+                using (var tmpconn = new TemporaryCoffinModel(GetSqlConfigData().ProviderConnectionString))
+                {
+                    try
+                    {
+                        tmpconn.Configuration.AutoDetectChangesEnabled = false;
+
+
+                        var tmpquery = await (from t in tmpconn.DadosBus
+                                              where t.Longitude <= value.Longitude
+                                                    && t.Latitude <= value.Latitude
+                                                    && t.DataHora == Convert.ToDateTime(value.DataHora)
+                                              select t).FirstOrDefaultAsync();
+
+                        if (tmpquery == null)
+                        {
+                            return resultado;
+                        }
+
+                        var tmpData = Convert.ToDateTime(value.DataHora).AddMonths( - 1);
+
+                        
+                        var tmpDataMedia = await (from t in tmpconn.DadosBus
+                                                      where t.Latitude>=tmpquery.Latitude && t.Longitude>=tmpquery.Longitude
+                                                      && t.Latitude<=value.Latitude && t.Longitude<=value.Longitude
+                                                      && t.DataHora>=tmpData && t.DataHora<=Convert.ToDateTime(value.DataHora)
+                                                      select t).Take(50).ToListAsync();
+
+
+                        if (tmpDataMedia.Any())
+                        {
+                            resultado = tmpDataMedia.Aggregate(resultado, (current, item) => current + item.DataHora.Ticks/current);
+                        }
+
+
+                    }
+                    finally
+                    {
+                        tmpconn.Configuration.AutoDetectChangesEnabled = true;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+
+                if (e.InnerException != null)
+                {
+                    LogManager.WriteError(1000, "Erro CSORTAPI GetMediaDatas: \n " + e.InnerException + "\n " + e.Message);
+                }
+                else
+                {
+                    LogManager.WriteError(1000, "Erro CSORTAPI GetMediaDatas:\n " + e.Message);
+                }
+            }
+            return resultado;
+        } 
+        #endregion
     }
 }

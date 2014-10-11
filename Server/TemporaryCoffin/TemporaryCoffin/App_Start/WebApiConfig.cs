@@ -2,6 +2,9 @@
 
 namespace TemporaryCoffin
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class WebApiConfig
     {
         public static void Register(HttpConfiguration config)

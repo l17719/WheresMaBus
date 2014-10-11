@@ -4,6 +4,9 @@ using Microsoft.Practices.EnterpriseLibrary.Common.Configuration;
 using Microsoft.Practices.EnterpriseLibrary.Logging;
 namespace TemporaryCoffin.Utils
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class LogFactoryManager
     {
         #region ClassVars

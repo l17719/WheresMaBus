@@ -14,5 +14,7 @@ namespace TemporaryCoffin.Models.DbModel
                 context.Database.Create();
             }
         }
+
+        
     }
 }

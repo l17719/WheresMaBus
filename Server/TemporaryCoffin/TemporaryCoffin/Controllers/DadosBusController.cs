@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
-using TemporaryCoffin.Models.DbModel.DbData;
 using TemporaryCoffin.Models.ValueObject;
 using TemporaryCoffin.Utils;
 
@@ -19,17 +16,54 @@ namespace TemporaryCoffin.Controllers
     {
         #region ClassVars
         private static readonly Utilities Instance = Utilities.GetInstance();
-        private static readonly LogFactoryManager LogManager = LogFactoryManager.GetInstance();
+        //private static readonly LogFactoryManager LogManager = LogFactoryManager.GetInstance();
         #endregion
 
         #region Metodos
+        
         #region ObterInfoBus
 
-        [HttpGet]
-        public async Task<InfoBus> ObterInfoBus()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [ActionName("GetBus")]
+        [ResponseType(typeof(string))]
+        public async Task<DataResponseVo> ObterInfoBus([FromBody]RequestVO value)
+        {
+
+            if (value == null)
+            {
+                return new DataResponseVo
+                {
+                   ResponseMessage = "NODATA"
+                };
+            }
+
+            var tmpTask = WorkerObterInfo(value);
+            var resultado = await tmpTask;
+            if (resultado == null)
+            {
+                return new DataResponseVo
+                {
+                    ResponseMessage = "ERRO"
+                };
+            }
+            return resultado;
+        }
+
+
+        private static async Task<DataResponseVo> WorkerObterInfo(RequestVO value)
         {
             try
             {
+                var tmpTask = Instance.GetLastPosBus(value);
+                var resultado = await tmpTask;
+                return resultado;
+
+
 
             }
             catch (Exception)
@@ -38,12 +72,9 @@ namespace TemporaryCoffin.Controllers
                 throw;
             }
         }
-
-        private static async Task<InfoBus> WorkerGetInfoBus()
-        {
-            
-        }
+        
         #endregion
+
         #region InjectaInformacaoBus
         /// <summary>
         /// metodo para inserir informacaoBus
@@ -53,24 +84,97 @@ namespace TemporaryCoffin.Controllers
         [HttpPost]
         [ActionName("Criar")]
         [ResponseType(typeof (string))]
-        public async Task<HttpResponseMessage> RegInfoBus([FromBody] InfoDataBus value)
+        public async Task<HttpResponseMessage> RegInfoBus([FromBody] InfoDataBusVo value)
         {
-            
+            if (value == null)
+            {
+                return new HttpResponseMessage { Content = new StringContent("NODATA"), StatusCode = HttpStatusCode.BadRequest };
+            }
+
+            var tmpTask = WorkerInfoBus(value);
+            var resultado = await tmpTask;
+            if (resultado == "NOK")
+            {
+                return new HttpResponseMessage
+                {
+                    Content = new StringContent("DATANOK"),
+                    StatusCode = HttpStatusCode.BadRequest
+                };
+            }
+
+            return new HttpResponseMessage {Content = new StringContent("DATAOK"), StatusCode = HttpStatusCode.OK};
         }
 
-        private static async Task<string> WorkerCriarArtigo(InfoDataBus value)
+        private static async Task<string> WorkerInfoBus(InfoDataBusVo value)
         {
+            var resultado="";
             try
             {
+                var tmpTask = Instance.RegisterBusInfo(value);
+                var resultadoTask = await tmpTask;
 
+                resultado = resultadoTask;
             }
             catch (Exception)
             {
+                resultado = "NOK";
                 
                 throw;
             }
+            return resultado;
         }
         #endregion
+
+
+        #region AddParagens
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [ActionName("ap")]
+        [ResponseType(typeof (string))]
+        public async Task<HttpResponseMessage> RegistaDadosParagem([FromBody] InfoDataBusVo value)
+        {
+            if (value == null)
+            {
+                return new HttpResponseMessage
+                {
+                    Content = new StringContent("NODATA"),
+                    StatusCode = HttpStatusCode.BadRequest
+                };
+            }
+
+            var tmptask = WorkerRegistoDadosParagem(value);
+            var resultado = await tmptask;
+            if (resultado == "NOK" || resultado == "SEMROTA")
+            {
+                return new HttpResponseMessage
+                {
+                    Content = new StringContent("BADDATA"),
+                    StatusCode = HttpStatusCode.Forbidden
+                };
+
+            }
+            return new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent("OK")
+            };
+        }
+
+
+        private static async Task<string> WorkerRegistoDadosParagem(InfoDataBusVo value)
+        {
+            var tmpTask = Instance.RegisterStop(value);
+            var resultado = await tmpTask;
+            return resultado;
+        }
+
+        #endregion
+
         #endregion
     }
 }

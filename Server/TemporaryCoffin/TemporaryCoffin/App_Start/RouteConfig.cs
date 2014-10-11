@@ -9,8 +9,8 @@ namespace TemporaryCoffin
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-            routes.MapHttpRoute("users", "api/users/{action}/{id}", new { controller = "Users", id = UrlParameter.Optional });
-            routes.MapHttpRoute("pedidos", "api/pedido/{id}", new { controller = "Pedidos", id = UrlParameter.Optional });
+            //routes.MapHttpRoute("users", "api/users/{action}/{id}", new { controller = "Users", id = UrlParameter.Optional });
+            //routes.MapHttpRoute("pedidos", "api/pedido/{id}", new { controller = "Pedidos", id = UrlParameter.Optional });
             routes.MapHttpRoute("BusData", "api/Bus/{action}/{id}", new { controller = "DadosBus", id = UrlParameter.Optional });
 
             routes.MapHttpRoute("echo", "api/echo/{id}", new { controller = "Echo", id = UrlParameter.Optional });
