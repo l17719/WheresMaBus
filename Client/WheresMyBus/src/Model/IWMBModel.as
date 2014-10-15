@@ -9,6 +9,9 @@ package Model
 		function ModelcheckGPSAvailable():Boolean; 
 		function ModelGetMyCoordinates():void;
 		function ModelCheckOnlineService():void;
-		
+		function ModelSetGpsAvailableActive(value:Boolean):void;
+		function ModelGetGpsAvailableActive():Boolean;
+		function ModelObtemChave():String;
+		function ModelSetMyCoordinates(value:RequestVO):void;
 	}
 }

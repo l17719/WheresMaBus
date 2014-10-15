@@ -7,7 +7,7 @@
 	
 	<fx:Script>
 		<![CDATA[
-			
+			[Bindable]
 			private var _message:String;
 
 			public function get message():String

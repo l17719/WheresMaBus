@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:tilemap="com.mapquest.tilemap.*"
+		title="Mapa"
+		contentCreationComplete="Mapa_contentCreationCompleteHandler(event)"
+		destructionPolicy="auto">
+	
+	<s:states>
+		<s:State name="GPSOK"/>
+		<s:State name="GPSNOK"/>
+	</s:states>
+	<fx:Script>
+		<![CDATA[
+			import Assets.AlertOk;
+			import Assets.Skins.SkinAlerta;
+			
+			import Controller.WMBController;
+			
+			import Eventos.EventoLocalizacao;
+			
+			import Model.VO.RequestVO;
+			
+			import Service.WMBService;
+			
+			import com.mapquest.LatLng;
+			import com.mapquest.tilemap.IShape;
+			import com.mapquest.tilemap.ShapeCollection;
+			import com.mapquest.tilemap.Size;
+			import com.mapquest.tilemap.TileMap;
+			import com.mapquest.tilemap.TileMapEvent;
+			
+			import mx.core.FlexGlobals;
+			import mx.core.IVisualElement;
+			import mx.events.FlexEvent;
+			
+			[Bindable]
+			public var mapa:TileMap;
+			
+			[Bindable]
+			private var tmpLongLat:LatLng;
+			
+			private var alOK:AlertOk;
+			
+			private var _instanciaService:WMBService= WMBService.GetInstance();
+			
+			// variavel para conter a singleton instace do controller
+			private var  instancia:WMBController= WMBController.GetInstance();
+			//
+			
+			protected function Mapa_contentCreationCompleteHandler(event:FlexEvent):void
+			{
+				
+				_instanciaService.removeEventListener(EventoLocalizacao.NOK,ondataOk);
+				_instanciaService.removeEventListener(EventoLocalizacao.Ok,ondataOk);
+				
+				//instancia.ControllerSetMyCoordinates(tmpdata);
+				tmpLongLat= new LatLng(38.134557, -98.4375);
+				// adicionar pin da minha localizacao
+				
+				//	
+				mapa= new TileMap(instancia.ControllerObtemChave(),3,tmpLongLat,"map");
+				mapa.size= new Size(this.width,this.height);
+				mapa.name="WMBMapa";
+				
+				/*to uncomment if (instancia.ControllerGetGpsAvailableActive()){
+					this.currentState="GPSOK";
+					_instanciaService.addEventListener(EventoLocalizacao.Ok,ondataOk,false,0,true);
+					_instanciaService.addEventListener(EventoLocalizacao.NOK,onFault,false,0,true);
+					
+				}
+				else{
+					this.currentState="GPSNOK";
+				}
+				 */
+				currentState="GPSOK";
+			}
+			
+			
+			// limpeza da gc e dados do mapa
+			private function removeItemsMapa():void{
+				if (mapa.getShapeCollection("routeRibbon")) {
+					this.removeShapesAndColls(mapa.getShapeCollection("routeRibbon"));
+					mapa.removeShapeCollection(mapa.getShapeCollection("routeRibbon"));
+				}
+				if (mapa.getShapeCollection("searchShapeCollection")) {
+					this.removeShapesAndColls(mapa.getShapeCollection("searchShapeCollection"));
+					mapa.removeShapeCollection(mapa.getShapeCollection("searchShapeCollection"));
+				}
+				
+				
+				this.removeShapesAndColls(mapa.getShapeCollection());
+			}
+			
+			/*
+			since we're mobile, do this to free up memory faster instead of waiting for gc
+			*/
+			private function removeShapesAndColls(coll:ShapeCollection):void {
+				var s:IShape;
+				
+				for (var i:int = 0; i < coll.length; i++) {
+					s = coll.getShapeAtIndex(i);
+					coll.remove(s);
+					s = null;
+				}
+				
+				coll = null;
+			}
+			//
+			
+			protected function ondataOk(event:EventoLocalizacao):void
+			{
+				_instanciaService.removeEventListener(EventoLocalizacao.NOK,ondataOk);
+				_instanciaService.removeEventListener(EventoLocalizacao.Ok,ondataOk);
+				var tmpdata:RequestVO= event._dadosLocation as RequestVO;
+				instancia.ControllerSetMyCoordinates(tmpdata);
+				tmpLongLat= new LatLng(38.134557, -98.4375);
+				// adicionar pin da minha localizacao
+				
+				//	
+				//mapa= new TileMap(instancia.ControllerObtemChave(),tmpLongLat);
+				mapa.size= new Size(GroupMapa.width,GroupMapa.height);
+				mapa.name="WMBMapa";
+				
+				
+				// adicionar pin da minha localizacao
+				
+				//
+			}
+			
+			protected function onFault(event:EventoLocalizacao):void
+			{
+				_instanciaService.removeEventListener(EventoLocalizacao.NOK,onFault);
+				_instanciaService.removeEventListener(EventoLocalizacao.Ok,onFault);
+				// TODO Auto-generated method stub
+				instancia.ControllerSetGpsAvailableActive(false);
+				alOK= new AlertOk;
+				alOK.message= "Nao foi possivel obter a sua localizacao, volte a tentar mais tarde!";
+				alOK.width = stage.width - 40;
+				alOK.x = FlexGlobals.topLevelApplication.width/2 - alOK.width/2;
+				alOK.y = (stage.height  - alOK.height) / 2;
+				alOK.setStyle("skinClass", SkinAlerta);
+				alOK.open(this, true);
+			}
+			
+		]]>
+	</fx:Script>
+	
+	
+	<s:Group name="grpContainer" width="80%" height="80%" id="GroupMapa" includeIn="GPSNOK">
+		
+		<s:Label name="TextoNOK" text="Sem dados GPS disponiveis" includeIn="GPSNOK"/>
+	</s:Group>
+</s:View>

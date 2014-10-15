@@ -1,5 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:ViewNavigatorApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
-							xmlns:s="library://ns.adobe.com/flex/spark" firstView="views.WheresMyBusHomeView" applicationDPI="240">
+							xmlns:s="library://ns.adobe.com/flex/spark" firstView="views.WheresMyBusHomeView" 
+							applicationDPI="240"
+							
+							height="100%"
+							width="100%"
+							splashScreenScaleMode="none"
+							splashScreenMinimumDisplayTime="500"
+							applicationComplete="WMBMain_applicationCompleteHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			import Assets.AlertOk;
+			import Assets.Skins.SkinAlerta;
+			
+			import Controller.WMBController;
+			
+			import mx.core.FlexGlobals;
+			import mx.events.FlexEvent;
+			import mx.events.ResizeEvent;
+			
+			import views.MapaView;
+			
+			
+			// variavel para conter a singleton instace do controller
+			private var  instancia:WMBController= WMBController.GetInstance();
+			private var alOK:AlertOk;
+			
+			protected function WMBMain_applicationCompleteHandler(event:FlexEvent):void
+			{
+				if (!instancia.ControllercheckGPSAvailable()){
+					instancia.ControllerSetGpsAvailableActive(false);
+					
+					
+				}
+				else{
+					instancia.ControllerSetGpsAvailableActive(true);
+				}
+				
+				
+				
+				splashScreenImage=null;
+				navigator.pushView(views.MapaView);
+			}
+			
+		]]>
+	</fx:Script>
+	
+	
+	
+	
 	
 </s:ViewNavigatorApplication>
