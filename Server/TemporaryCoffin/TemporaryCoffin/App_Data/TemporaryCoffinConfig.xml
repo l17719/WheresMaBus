@@ -493,7 +493,7 @@
         </member>
         <member name="M:TemporaryCoffin.Controllers.DadosBusController.ObterInfoBus(TemporaryCoffin.Models.ValueObject.RequestVO)">
             <summary>
-            
+            Metodo para devolver a informacao da localizacao do bus
             </summary>
             <param name="value"></param>
             <returns></returns>
@@ -511,6 +511,11 @@
             </summary>
             <param name="value"></param>
             <returns></returns>
+        </member>
+        <member name="T:TemporaryCoffin.Controllers.EchoController">
+            <summary>
+            
+            </summary>
         </member>
         <member name="M:TemporaryCoffin.Controllers.EchoController.Echo">
             <summary>
@@ -530,7 +535,7 @@
         </member>
         <member name="T:TemporaryCoffin.Models.DbModel.TemporaryCoffinDbInitializer">
             <summary>
-            
+            Classe para conter o inicializador da base de dados e "seed" dos dados
             </summary>
         </member>
         <member name="T:TemporaryCoffin.Models.DbModel.TemporaryCoffinModel">

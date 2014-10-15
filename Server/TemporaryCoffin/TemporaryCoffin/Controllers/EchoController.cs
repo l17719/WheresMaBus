@@ -5,6 +5,9 @@ using System.Web.Http.Description;
 
 namespace TemporaryCoffin.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class EchoController : ApiController
     {
         #region Metodos

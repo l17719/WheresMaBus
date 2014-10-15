@@ -24,34 +24,30 @@ namespace TemporaryCoffin.Controllers
         #region ObterInfoBus
 
         /// <summary>
-        /// 
+        /// Metodo para devolver a informacao da localizacao do bus
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
         [HttpPost]
         [ActionName("GetBus")]
-        [ResponseType(typeof(string))]
-        public async Task<DataResponseVo> ObterInfoBus([FromBody]RequestVO value)
+        [ResponseType(typeof(DataResponseVo))]
+        public async Task<IHttpActionResult> ObterInfoBus([FromBody]RequestVO value)
         {
 
             if (value == null)
             {
-                return new DataResponseVo
-                {
-                   ResponseMessage = "NODATA"
-                };
+                return BadRequest("Sem informacao");
+               
             }
 
             var tmpTask = WorkerObterInfo(value);
             var resultado = await tmpTask;
             if (resultado == null)
             {
-                return new DataResponseVo
-                {
-                    ResponseMessage = "ERRO"
-                };
+                return NotFound();
+
             }
-            return resultado;
+            return Ok(resultado);
         }
 
 
