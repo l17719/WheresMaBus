@@ -12,7 +12,7 @@ namespace TemporaryCoffin.Controllers
     {
         #region Metodos
         /// <summary>
-        /// metodo para devolver uma mensagem de echo para teste
+        /// metodo para devolver uma mensagem de echo para teste do servico online
         /// </summary>
         /// <returns></returns>
         [HttpGet]
