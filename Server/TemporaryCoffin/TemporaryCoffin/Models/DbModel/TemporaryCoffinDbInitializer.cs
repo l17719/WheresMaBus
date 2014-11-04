@@ -134,6 +134,86 @@ namespace TemporaryCoffin.Models.DbModel
                    latitude = 38.570941,
                    longitude = -7.909378999999944
                 },
+                new Paragens
+                {
+                    ID = Guid.NewGuid(),
+                    NomeParagem = "Rua de Serpa Pinto, Evora",
+                   IdLinha = new Guid("41297aff-fa85-4194-a3fd-a2e52606b04c"),
+                   latitude = 38.5706994,
+                   longitude = -7.911979400000064
+                },
+                new Paragens
+                {
+                    ID = Guid.NewGuid(),
+                    NomeParagem = "Rua de Serpa Pinto, Evora",
+                   IdLinha = new Guid("41297aff-fa85-4194-a3fd-a2e52606b04c"),
+                   latitude = 38.5706994,
+                   longitude = -7.911979400000064
+                },
+                new Paragens
+                {
+                    ID = Guid.NewGuid(),
+                    NomeParagem = "Avenida Lisboa",
+                   IdLinha = new Guid("41297aff-fa85-4194-a3fd-a2e52606b04c"),
+                   latitude = 38.5719461,
+                   longitude = -7.915531299999998
+                },
+                 new Paragens
+                {
+                    ID = Guid.NewGuid(),
+                    NomeParagem = "Horta da Porta",
+                   IdLinha = new Guid("41297aff-fa85-4194-a3fd-a2e52606b04c"),
+                   latitude = 38.574747,
+                   longitude = -7.916391200000021
+                },
+                 new Paragens
+                {
+                    ID = Guid.NewGuid(),
+                    NomeParagem = "Porta Nova Rua Candido Reis",
+                   IdLinha = new Guid("41297aff-fa85-4194-a3fd-a2e52606b04c"),
+                   latitude = 38.5744402,
+                   longitude = -7.912951600000042
+                },
+                new Paragens
+                {
+                    ID = Guid.NewGuid(),
+                    NomeParagem = "Rua Menino Jesus",
+                   IdLinha = new Guid("41297aff-fa85-4194-a3fd-a2e52606b04c"),
+                   latitude = 38.5733317,
+                   longitude = -7.908930700000042
+                },
+                new Paragens
+                {
+                    ID = Guid.NewGuid(),
+                    NomeParagem = "Rampa Seminario Largo Colegiais",
+                   IdLinha = new Guid("41297aff-fa85-4194-a3fd-a2e52606b04c"),
+                   latitude = 38.5736278,
+                   longitude = -7.9062404000000015
+                },
+                new Paragens
+                {
+                    ID = Guid.NewGuid(),
+                    NomeParagem = "Rua Doutor Domingos Rosado",
+                   IdLinha = new Guid("41297aff-fa85-4194-a3fd-a2e52606b04c"),
+                   latitude = 38.5747516,
+                   longitude = -7.901795399999969
+                },
+                 new Paragens
+                {
+                    ID = Guid.NewGuid(),
+                    NomeParagem = "Avenida da Universidade",
+                   IdLinha = new Guid("41297aff-fa85-4194-a3fd-a2e52606b04c"),
+                   latitude = 38.5739458,
+                   longitude = -7.903209599999968
+                },
+                new Paragens
+                {
+                    ID = Guid.NewGuid(),
+                    NomeParagem = "Rua da Corredoura",
+                   IdLinha = new Guid("41297aff-fa85-4194-a3fd-a2e52606b04c"),
+                   latitude = 38.5737883,
+                   longitude = -7.9096002999999655
+                },
             };
         }
 
