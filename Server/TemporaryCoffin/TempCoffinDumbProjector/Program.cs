@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using RestSharp;
 using TempCoffinDumbProjector.Model;
 
 namespace TempCoffinDumbProjector
@@ -211,6 +212,8 @@ namespace TempCoffinDumbProjector
 
         private static async Task<String> GenerateData()
         {
+            var restClient = new RestClient("");
+
             var i = 0;
             while (true)
             {
@@ -225,9 +228,23 @@ namespace TempCoffinDumbProjector
                     SelectedParagem = Listaparagens[i];
                 }
 
+
+                restClient = new RestClient("");
+                var req = new RestRequest("api/NomeController/", Method.POST);
+                req.AddParameter("application/json", new InfoDataBusVo
+                {
+                    DataHora = DateTime.UtcNow.ToShortDateString(),
+                    Id = Guid.NewGuid().ToString(),
+                    NomeParagem = SelectedParagem.NomeParagem,
+                    Latitude = SelectedParagem.latitude,
+                    Longitude = SelectedParagem.longitude
+                    
+                }, ParameterType.RequestBody);
+
+                var response =  restClient.Execute(req);
+                
                 await Task.Delay(2000);
             }
-            
         }
     }
 }
