@@ -14,6 +14,10 @@ namespace TemporaryCoffin.Models.DbModel
         public DbSet<BusDataInformation> DadosBus { get; set; }
         public DbSet<Paragens> DadosParagens { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
         public TemporaryCoffinModel(string connection)
             : base(connection)
         {

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using TemporaryCoffin.Models.DbModel.DbData;
 
@@ -11,6 +12,17 @@ namespace TemporaryCoffin.Models.DbModel
     {
         protected override void Seed(TemporaryCoffinModel context)
         {
+
+
+            var tmpInfoLinha = new Linha
+            {
+                ID = Guid.NewGuid(),
+                NomeLinha = "LinhaAzul",
+                LatInicio = 38.5653476,
+                LongInicio = -7.909456999999975,
+                LatFim = 38.5690676,
+                LongFim = -7.917530299999953
+            };
 
             var tmpDadosParagem = GenerateParagens();
             foreach (var item in tmpDadosParagem)
