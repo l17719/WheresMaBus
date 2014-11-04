@@ -231,12 +231,12 @@ namespace TemporaryCoffin.Utils
         {
             try
             {
-                using (var _tmpconn = new TemporaryCoffinModel(GetSqlConfigData().ProviderConnectionString))
+                using (var tmpconn = new TemporaryCoffinModel(GetSqlConfigData().ProviderConnectionString))
                 {
                     try
                     {
-                        _tmpconn.Configuration.AutoDetectChangesEnabled = false;
-                        var tmpquery = await (from t in _tmpconn.DadosBus
+                        tmpconn.Configuration.AutoDetectChangesEnabled = false;
+                        var tmpquery = await (from t in tmpconn.DadosBus
                             where t.Longitude <= value.Longitude
                                   && t.Latitude <= value.Latitude
                                   && t.DataHora == Convert.ToDateTime(value.DataHora)
@@ -273,7 +273,7 @@ namespace TemporaryCoffin.Utils
                     }
                     finally
                     {
-                        _tmpconn.Configuration.AutoDetectChangesEnabled = true;
+                        tmpconn.Configuration.AutoDetectChangesEnabled = true;
                     }
                 }
             }
