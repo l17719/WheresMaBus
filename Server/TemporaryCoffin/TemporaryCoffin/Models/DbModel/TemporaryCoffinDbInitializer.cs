@@ -80,8 +80,60 @@ namespace TemporaryCoffin.Models.DbModel
                 new Paragens
                 {
                     ID = Guid.NewGuid(),
-                    NomeParagem = 
-                }
+                    NomeParagem = "Avenida S. Joao Deus",
+                    IdLinha = new Guid("41297aff-fa85-4194-a3fd-a2e52606b04c"),
+                    latitude = 38.5701901,
+                    longitude = -7.901536299999975
+                },
+                new Paragens
+                {
+                    ID = Guid.NewGuid(),
+                    NomeParagem = "Rua Machede",
+                    IdLinha = new Guid("41297aff-fa85-4194-a3fd-a2e52606b04c"),
+                    latitude = 38.5720499,
+                    longitude = -7.903438100000017,
+
+                },
+                new Paragens
+                {
+                    IdLinha = new Guid("41297aff-fa85-4194-a3fd-a2e52606b04c"),
+                    ID = Guid.NewGuid(),
+                    NomeParagem = "Portas de moura, Rua Dom Augusto Eduardo Nunes",
+                    latitude = 38.5691873,
+                    longitude = -7.904356900000039
+                },
+                  new Paragens
+                {
+                    ID = Guid.NewGuid(),
+                    NomeParagem = "Hospital Espirito Santo",
+                   IdLinha = new Guid("41297aff-fa85-4194-a3fd-a2e52606b04c"),
+                   latitude = 38.5689513,
+                   longitude = -7.903241299999991
+                },
+                  new Paragens
+                {
+                    ID = Guid.NewGuid(),
+                    NomeParagem = "Rossio Sao Bras",
+                   IdLinha = new Guid("41297aff-fa85-4194-a3fd-a2e52606b04c"),
+                   latitude = 38.5665979,
+                   longitude = -7.905662799999959
+                },
+                 new Paragens
+                {
+                    ID = Guid.NewGuid(),
+                    NomeParagem = "Rua Republica",
+                   IdLinha = new Guid("41297aff-fa85-4194-a3fd-a2e52606b04c"),
+                   latitude = 38.5693596,
+                   longitude = -7.908276999999998
+                },
+                 new Paragens
+                {
+                    ID = Guid.NewGuid(),
+                    NomeParagem = "Praça Giraldo",
+                   IdLinha = new Guid("41297aff-fa85-4194-a3fd-a2e52606b04c"),
+                   latitude = 38.570941,
+                   longitude = -7.909378999999944
+                },
             };
         }
 
