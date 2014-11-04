@@ -28,6 +28,8 @@ namespace TemporaryCoffin.Models.DbModel
 
             
             base.OnModelCreating(modelBuilder);
+           
+            
             modelBuilder.Configurations.Add(new LinhaMapping());
             modelBuilder.Configurations.Add(new BusDataInformationMapping());
             modelBuilder.Configurations.Add(new ParagensMapping());
