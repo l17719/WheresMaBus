@@ -30,12 +30,7 @@ namespace TemporaryCoffin.Models.DbModel
 
                 context.DadosParagens.Add(item);
             }
-            var tmpDadosBus = GenerateBusData();
-
-            foreach (var itembus in tmpDadosBus)
-            {
-                context.DadosBus.Add(itembus);
-            }
+            
 
 
             base.Seed(context);
@@ -214,13 +209,28 @@ namespace TemporaryCoffin.Models.DbModel
                    latitude = 38.5737883,
                    longitude = -7.9096002999999655
                 },
+                 new Paragens
+                {
+                    ID = Guid.NewGuid(),
+                    NomeParagem = "Rua de Aviz",
+                   IdLinha = new Guid("41297aff-fa85-4194-a3fd-a2e52606b04c"),
+                   latitude = 38.5748003,
+                   longitude = -7.909974899999952
+                },
+                new Paragens
+                {
+                    ID = Guid.NewGuid(),
+                    NomeParagem = "Avenida de São Sebastião",
+                   IdLinha = new Guid("41297aff-fa85-4194-a3fd-a2e52606b04c"),
+                   latitude = 38.5690676,
+                   longitude = -7.917530299999953
+                },
             };
+
+            return resultado;
         }
 
 
-        private static IEnumerable<BusDataInformation> GenerateBusData()
-        {
-            return new List<BusDataInformation>();
-        } 
+       
     }
 }
