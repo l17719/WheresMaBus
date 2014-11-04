@@ -16,7 +16,7 @@ namespace TemporaryCoffin.Models.DbModel
 
             var tmpInfoLinha = new Linha
             {
-                ID = Guid.NewGuid(),
+                ID = new Guid("41297aff-fa85-4194-a3fd-a2e52606b04c"),
                 NomeLinha = "LinhaAzul",
                 LatInicio = 38.5653476,
                 LongInicio = -7.909456999999975,
@@ -43,7 +43,46 @@ namespace TemporaryCoffin.Models.DbModel
 
         private static IEnumerable<Paragens> GenerateParagens()
         {
-            return new List<Paragens>();
+            var resultado= new List<Paragens>
+            {
+                new Paragens
+                {
+                    ID = Guid.NewGuid(),
+                    IdLinha = new Guid("41297aff-fa85-4194-a3fd-a2e52606b04c"),
+                    NomeParagem = "Av Dinis Miranda",
+                    latitude = 38.5653476,
+                    longitude = -7.909456999999975
+                },
+                new Paragens
+                {
+                    ID = Guid.NewGuid(),
+                    IdLinha = new Guid("41297aff-fa85-4194-a3fd-a2e52606b04c"),
+                    NomeParagem = "Av Combatentes",
+                    latitude = 38.562692,
+                    longitude = -7.906251699999984
+                },
+                new Paragens
+                {
+                    ID = Guid.NewGuid(),
+                    IdLinha = new Guid("41297aff-fa85-4194-a3fd-a2e52606b04c"),
+                    NomeParagem = "Chafariz del Rei",
+                    latitude = 38.5664284,
+                    longitude = -7.902641000000017
+                },
+                new Paragens
+                {
+                    ID = Guid.NewGuid(),
+                    NomeParagem = "Hospital Patrocinio",
+                   IdLinha = new Guid("41297aff-fa85-4194-a3fd-a2e52606b04c"),
+                   latitude = 38.5689513,
+                   longitude = -7.903241299999991
+                },
+                new Paragens
+                {
+                    ID = Guid.NewGuid(),
+                    NomeParagem = 
+                }
+            };
         }
 
 
