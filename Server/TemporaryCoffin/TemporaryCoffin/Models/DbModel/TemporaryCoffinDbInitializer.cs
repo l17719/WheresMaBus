@@ -31,6 +31,7 @@ namespace TemporaryCoffin.Models.DbModel
                 context.DadosParagens.Add(item);
             }
             
+            
 
 
             base.Seed(context);
