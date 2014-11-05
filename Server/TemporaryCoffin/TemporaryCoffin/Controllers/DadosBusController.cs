@@ -10,7 +10,7 @@ using TemporaryCoffin.Utils;
 namespace TemporaryCoffin.Controllers
 {
     /// <summary>
-    /// 
+    /// Controller Bus
     /// </summary>
     public class DadosBusController : ApiController
     {
@@ -53,20 +53,11 @@ namespace TemporaryCoffin.Controllers
 
         private static async Task<DataResponseVo> WorkerObterInfo(RequestVO value)
         {
-            try
-            {
-                var tmpTask = Instance.GetLastPosBus(value);
-                var resultado = await tmpTask;
-                return resultado;
 
-
-
-            }
-            catch (Exception)
-            {
-                
-                throw;
-            }
+            var tmpTask = Instance.GetLastPosBus(value);
+            var resultado = await tmpTask;
+            return resultado;
+            
         }
         
         #endregion
