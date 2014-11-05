@@ -9,11 +9,18 @@ namespace TempCoffinDumbProjector
     public class Program
     {
 
-        private static List<Paragens> Listaparagens;
-        private static Paragens SelectedParagem;
-        static void Main(string[] args)
+        private static List<Paragens> _listaparagens;
+        private static Paragens _selectedParagem;
+        static async void Main(string[] args)
         {
-            Listaparagens = GeraListaParagens();
+            _listaparagens = GeraListaParagens();
+
+            var tmpTask = GenerateData();
+            var resultado = await tmpTask;
+            if (resultado == "OK")
+            {
+                Environment.Exit(0);
+            }
         }
 
         private static List<Paragens> GeraListaParagens()
@@ -212,39 +219,43 @@ namespace TempCoffinDumbProjector
 
         private static async Task<String> GenerateData()
         {
-            var restClient = new RestClient("");
-
             var i = 0;
             while (true)
             {
-                if (SelectedParagem == null)
+                if (_selectedParagem == null)
                 {
-                    SelectedParagem = Listaparagens[i];
+                    _selectedParagem = _listaparagens[i];
                     i++;
                 }
-                if (i == Listaparagens.Count)
+                if (i == _listaparagens.Count)
                 {
                     i = 0;
-                    SelectedParagem = Listaparagens[i];
+                    _selectedParagem = _listaparagens[i];
                 }
 
 
-                restClient = new RestClient("");
-                var req = new RestRequest("api/NomeController/", Method.POST);
+                var restClient = new RestClient("http://localhost:/");
+                var req = new RestRequest("api/Bus/Criar", Method.POST);
                 req.AddParameter("application/json", new InfoDataBusVo
                 {
                     DataHora = DateTime.UtcNow.ToShortDateString(),
                     Id = Guid.NewGuid().ToString(),
-                    NomeParagem = SelectedParagem.NomeParagem,
-                    Latitude = SelectedParagem.latitude,
-                    Longitude = SelectedParagem.longitude
+                    NomeParagem = _selectedParagem.NomeParagem,
+                    Latitude = _selectedParagem.latitude,
+                    Longitude = _selectedParagem.longitude
                     
                 }, ParameterType.RequestBody);
 
                 var response =  restClient.Execute(req);
+                if (response.Content == "DATAOK")
+                {
+                    
+                    await Task.Delay(2000);
+                }
                 
-                await Task.Delay(2000);
             }
+            return "OK";
         }
+         
     }
 }
