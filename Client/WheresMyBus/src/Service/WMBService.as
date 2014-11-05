@@ -1,6 +1,5 @@
 package Service
 {
-	import Eventos.EventoErro;
 	import Eventos.EventoLocalizacao;
 	import Eventos.EventoRemoteService;
 	

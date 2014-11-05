@@ -30,12 +30,13 @@ package Controller
 		public function ControllerCheckOnlineService():void
 		{
 			// TODO Auto Generated method stub
+			_instanciaModel.ModelCheckOnlineService();
 			
 		}
 		
 		public function ControllerGetMyCoordinates():void
 		{
-			// TODO Auto Generated method stub
+			_instanciaModel.ModelGetMyCoordinates();
 			
 		}
 		
@@ -53,7 +54,7 @@ package Controller
 		public function ControllersendCoordinates(value:RequestVO):void
 		{
 			// TODO Auto Generated method stub
-			
+			_instanciaModel.ModelsendCoordinates(value);
 		}
 		
 		
