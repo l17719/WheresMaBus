@@ -234,7 +234,7 @@ namespace TempCoffinDumbProjector
                 }
 
 
-                var restClient = new RestClient("http://localhost:/");
+                var restClient = new RestClient("http://localhost:/61765/");
                 var req = new RestRequest("api/Bus/Criar", Method.POST);
                 req.AddParameter("application/json", new InfoDataBusVo
                 {
