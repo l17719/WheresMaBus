@@ -10,7 +10,7 @@ using TemporaryCoffin.Utils;
 namespace TemporaryCoffin.Controllers
 {
     /// <summary>
-    /// 
+    /// Controller Bus
     /// </summary>
     public class DadosBusController : ApiController
     {

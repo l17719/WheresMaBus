@@ -22,7 +22,11 @@ namespace TempCoffinDumbProjector
                 Environment.Exit(0);
             }
         }
-
+        #region GeraDadosDummy
+        /// <summary>
+        /// Gera lista paragens lista para injeccao de dados dummy
+        /// </summary>
+        /// <returns> List</returns>
         private static List<Paragens> GeraListaParagens()
         {
            return new List<Paragens>
@@ -215,8 +219,13 @@ namespace TempCoffinDumbProjector
             };
            
         }
+        #endregion
 
-
+        #region DummyInjection
+        /// <summary>
+        /// Metodo para gerar dummy data para o bus
+        /// </summary>
+        /// <returns>String</returns>
         private static async Task<String> GenerateData()
         {
             var i = 0;
@@ -256,6 +265,6 @@ namespace TempCoffinDumbProjector
             }
             return "OK";
         }
-         
+        #endregion
     }
 }
