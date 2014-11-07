@@ -2,7 +2,7 @@
 namespace TemporaryCoffin.Models.ValueObject
 {
     /// <summary>
-    /// 
+    /// Value Object para conter os dados de coordenadas
     /// </summary>
     public class CoordinatesVo
     {
