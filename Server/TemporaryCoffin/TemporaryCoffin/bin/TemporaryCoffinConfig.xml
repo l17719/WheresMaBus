@@ -545,23 +545,38 @@
         </member>
         <member name="T:TemporaryCoffin.Models.DbModel.TemporaryCoffinModel">
             <summary>
-            
+            Classe que funciona como definicao do modelo de dados
             </summary>
         </member>
         <member name="M:TemporaryCoffin.Models.DbModel.TemporaryCoffinModel.#ctor(System.String)">
             <summary>
-            
+            Ctor da class
             </summary>
             <param name="connection"></param>
         </member>
-        <member name="T:TemporaryCoffin.Models.ValueObject.CoordinatesVo">
+        <member name="P:TemporaryCoffin.Models.DbModel.TemporaryCoffinModel.DadosLinha">
+            <summary>
+            Propriedade para conter
+            </summary>
+        </member>
+        <member name="P:TemporaryCoffin.Models.DbModel.TemporaryCoffinModel.DadosBus">
             <summary>
             
+            </summary>
+        </member>
+        <member name="P:TemporaryCoffin.Models.DbModel.TemporaryCoffinModel.DadosParagens">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:TemporaryCoffin.Models.ValueObject.CoordinatesVo">
+            <summary>
+            Value Object para conter os dados de coordenadas
             </summary>
         </member>
         <member name="T:TemporaryCoffin.Models.ValueObject.DataResponseVo">
             <summary>
-            
+            Value Object para conter os dados de resposta ao pedido de informacao
             </summary>
         </member>
         <member name="T:TemporaryCoffin.Models.ValueObject.InfoDataBusVo">

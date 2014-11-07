@@ -236,10 +236,11 @@ namespace TemporaryCoffin.Utils
                     try
                     {
                         tmpconn.Configuration.AutoDetectChangesEnabled = false;
+                        var tmpData = Convert.ToDateTime(value.DataHora);
                         var tmpquery = await (from t in tmpconn.DadosBus
                             where t.Longitude <= value.Longitude
                                   && t.Latitude <= value.Latitude
-                                  && t.DataHora == Convert.ToDateTime(value.DataHora)
+                                  && t.DataHora <= tmpData
                             select t).ToListAsync();
 
 

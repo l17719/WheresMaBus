@@ -81,3 +81,4 @@ C:\Users\joao\Documents\Visual Studio 2013\Projects\Repo\Server\TemporaryCoffin\
 C:\Users\joao\Documents\Visual Studio 2013\Projects\Repo\Server\TemporaryCoffin\TemporaryCoffin\bin\Antlr3.Runtime.pdb
 C:\Users\joao\Documents\Visual Studio 2013\Projects\Repo\Server\TemporaryCoffin\TemporaryCoffin\obj\Debug\TemporaryCoffin.dll
 C:\Users\joao\Documents\Visual Studio 2013\Projects\Repo\Server\TemporaryCoffin\TemporaryCoffin\obj\Debug\TemporaryCoffin.pdb
+C:\Users\joao\Documents\Visual Studio 2013\Projects\Repo\Server\TemporaryCoffin\TemporaryCoffin\obj\Debug\TemporaryCoffin.csprojResolveAssemblyReference.cache
