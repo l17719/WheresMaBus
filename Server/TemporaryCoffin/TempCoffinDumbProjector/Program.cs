@@ -244,7 +244,9 @@ namespace TempCoffinDumbProjector
                 }
 
 
-                
+                // escrita consola dos dados
+                Console.WriteLine("Informacao contador {0}\n, informacao paragem {1}\n, nome paragem {2}\n",i,_selectedParagem.ID, _selectedParagem.NomeParagem);
+                //
 
 
                 var restClient = new RestClient("http://localhost:61765");
@@ -272,11 +274,11 @@ namespace TempCoffinDumbProjector
                 //    Longitude = _selectedParagem.longitude
                     
                 //});
-                
 
-                var response = restClient.Execute(req);
+
+                var response = restClient.ExecuteAsync(req, serverak => Console.WriteLine("resposta: {0}\n", serverak.Content));
                 i++;
-               Thread.Sleep(60000);
+                Thread.Sleep(300000);
                 
             }
             return "OK";
