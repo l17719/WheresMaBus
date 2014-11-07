@@ -30,10 +30,10 @@ namespace TemporaryCoffin.Models.DbModel
 
                 context.DadosParagens.Add(item);
             }
-            
-            
 
 
+            context.DadosLinha.Add(tmpInfoLinha);
+            context.SaveChanges();
             base.Seed(context);
         }
 

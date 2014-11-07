@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity.ModelConfiguration;
-using System.Linq;
-using System.Web;
+﻿using System.Data.Entity.ModelConfiguration;
 
 namespace TemporaryCoffin.Models.DbModel.DbData.Mapping
 {
-    public class BusDataInformationMapping:EntityTypeConfiguration<BusDataInformation>
+    /// <summary>
+    /// 
+    /// </summary>
+    public class BusDataInformationMapping : EntityTypeConfiguration<BusDataInformation>
     {
         public BusDataInformationMapping()
         {

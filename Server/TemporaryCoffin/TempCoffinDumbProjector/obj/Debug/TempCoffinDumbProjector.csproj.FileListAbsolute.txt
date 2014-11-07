@@ -1,1 +1,8 @@
 C:\Users\joao\Documents\Visual Studio 2013\Projects\Repo\Server\TemporaryCoffin\TempCoffinDumbProjector\bin\Debug\TempCoffinDumbProjector.exe.config
+C:\Users\joao\Documents\Visual Studio 2013\Projects\Repo\Server\TemporaryCoffin\TempCoffinDumbProjector\bin\Debug\TempCoffinDumbProjector.exe
+C:\Users\joao\Documents\Visual Studio 2013\Projects\Repo\Server\TemporaryCoffin\TempCoffinDumbProjector\bin\Debug\TempCoffinDumbProjector.pdb
+C:\Users\joao\Documents\Visual Studio 2013\Projects\Repo\Server\TemporaryCoffin\TempCoffinDumbProjector\bin\Debug\RestSharp.dll
+C:\Users\joao\Documents\Visual Studio 2013\Projects\Repo\Server\TemporaryCoffin\TempCoffinDumbProjector\bin\Debug\RestSharp.xml
+C:\Users\joao\Documents\Visual Studio 2013\Projects\Repo\Server\TemporaryCoffin\TempCoffinDumbProjector\obj\Debug\TempCoffinDumbProjector.csprojResolveAssemblyReference.cache
+C:\Users\joao\Documents\Visual Studio 2013\Projects\Repo\Server\TemporaryCoffin\TempCoffinDumbProjector\obj\Debug\TempCoffinDumbProjector.exe
+C:\Users\joao\Documents\Visual Studio 2013\Projects\Repo\Server\TemporaryCoffin\TempCoffinDumbProjector\obj\Debug\TempCoffinDumbProjector.pdb

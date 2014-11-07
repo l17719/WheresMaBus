@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Threading;
 using System.Threading.Tasks;
 using RestSharp;
 using TempCoffinDumbProjector.Model;
@@ -11,16 +13,16 @@ namespace TempCoffinDumbProjector
 
         private static List<Paragens> _listaparagens;
         private static Paragens _selectedParagem;
-        static async void Main(string[] args)
+        static  void Main(string[] args)
         {
             _listaparagens = GeraListaParagens();
 
-            var tmpTask = GenerateData();
-            var resultado = await tmpTask;
-            if (resultado == "OK")
+            var tmpTask = Task<string>.Factory.StartNew(GenerateData);
+            if (tmpTask.Result == "OK")
             {
                 Environment.Exit(0);
             }
+
         }
         #region GeraDadosDummy
         /// <summary>
@@ -226,41 +228,55 @@ namespace TempCoffinDumbProjector
         /// Metodo para gerar dummy data para o bus
         /// </summary>
         /// <returns>String</returns>
-        private static async Task<String> GenerateData()
+        private static string GenerateData()
         {
             var i = 0;
             while (true)
             {
-                if (_selectedParagem == null)
-                {
-                    _selectedParagem = _listaparagens[i];
-                    i++;
-                }
                 if (i == _listaparagens.Count)
                 {
                     i = 0;
                     _selectedParagem = _listaparagens[i];
                 }
-
-
-                var restClient = new RestClient("http://localhost:/61765/");
-                var req = new RestRequest("api/Bus/Criar", Method.POST);
-                req.AddParameter("text/json", new InfoDataBusVo
+                else
                 {
-                    DataHora = DateTime.UtcNow.ToShortDateString(),
+                    _selectedParagem = _listaparagens[i];
+                }
+
+
+                
+
+
+                var restClient = new RestClient("http://localhost:61765");
+                var req = new RestRequest("/api/bdata/c/value", Method.POST)
+                {
+                    RequestFormat = DataFormat.Json,
+                    
+                }.AddBody(new InfoDataBusVo
+                {
+                    DataHora = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
                     Id = Guid.NewGuid().ToString(),
                     NomeParagem = _selectedParagem.NomeParagem,
                     Latitude = _selectedParagem.latitude,
                     Longitude = _selectedParagem.longitude
-                    
-                }, ParameterType.RequestBody);
 
-                var response =  restClient.Execute(req);
-                if (response.Content == "DATAOK")
-                {
+                });
+                req.AddHeader("Accept", "application/json");
+
+                //req.AddObject( new InfoDataBusVo
+                //{
+                //    DataHora = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                //    Id = Guid.NewGuid().ToString(),
+                //    NomeParagem = _selectedParagem.NomeParagem,
+                //    Latitude = _selectedParagem.latitude,
+                //    Longitude = _selectedParagem.longitude
                     
-                    await Task.Delay(2000);
-                }
+                //});
+                
+
+                var response = restClient.Execute(req);
+                i++;
+               Thread.Sleep(60000);
                 
             }
             return "OK";

@@ -21,7 +21,7 @@ namespace TemporaryCoffin.Models.DbModel
         public TemporaryCoffinModel(string connection)
             : base(connection)
         {
-            Database.SetInitializer<TemporaryCoffinModel>(null);
+            Database.SetInitializer(new TemporaryCoffinDbInitializer());
         }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

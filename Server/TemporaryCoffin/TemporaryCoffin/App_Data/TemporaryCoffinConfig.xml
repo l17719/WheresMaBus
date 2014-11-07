@@ -488,7 +488,7 @@
         </member>
         <member name="T:TemporaryCoffin.Controllers.DadosBusController">
             <summary>
-            
+            Controller Bus
             </summary>
         </member>
         <member name="M:TemporaryCoffin.Controllers.DadosBusController.ObterInfoBus(TemporaryCoffin.Models.ValueObject.RequestVO)">
@@ -524,6 +524,11 @@
             <returns></returns>
         </member>
         <member name="T:TemporaryCoffin.Models.DbModel.DbData.Linha">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:TemporaryCoffin.Models.DbModel.DbData.Mapping.BusDataInformationMapping">
             <summary>
             
             </summary>

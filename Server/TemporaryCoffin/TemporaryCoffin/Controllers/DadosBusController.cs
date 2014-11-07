@@ -69,7 +69,7 @@ namespace TemporaryCoffin.Controllers
         /// <param name="value"></param>
         /// <returns></returns>
         [HttpPost]
-        [ActionName("Criar")]
+        [ActionName("c")]
         [ResponseType(typeof (string))]
         public async Task<HttpResponseMessage> RegInfoBus([FromBody] InfoDataBusVo value)
         {
