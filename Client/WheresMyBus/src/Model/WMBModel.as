@@ -15,10 +15,18 @@ package Model
 		// variavel de instancia para conter a instacia do service
 		private var instanciaService:WMBService= WMBService.GetInstance();
 		
+		private var _GPSAvailable:Boolean;
+		
+		private var _SelectedLocationVO:RequestVO;
+		
+		//metodo para implementar o modelo singleton
+		private static var _instance:WMBModel;
+		
+		
 		public function ModelCheckOnlineService():void
 		{
 			// TODO Auto Generated method stub
-			
+			instanciaService.ServiceCheckOnlineService();
 		}
 		
 		public function ModelGetMyCoordinates():void
@@ -36,17 +44,12 @@ package Model
 		public function ModelsendCoordinates(value:RequestVO):void
 		{
 			// TODO Auto Generated method stub
-			
+			instanciaService.ServicesendCoordinates(value);
 		}
 		
 		//
 		
-		private var _GPSAvailable:Boolean;
 		
-		private var _SelectedLocationVO:RequestVO;
-		
-		private static var _instance:WMBModel;
-		//metodo para implementar o modelo singleton
 
 		public function get GPSAvailable():Boolean
 		{
@@ -68,6 +71,8 @@ package Model
 		{
 			_instance=this;
 		}
+		
+		
 		public function ModelcheckGPSAvailable():Boolean
 		{
 			// TODO Auto Generated method stub
