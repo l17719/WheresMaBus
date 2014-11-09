@@ -229,6 +229,7 @@ namespace TemporaryCoffin.Utils
         /// <returns></returns>
         public async Task<DataResponseVo> GetLastPosBus(RequestVO value)
         {
+            var resultado= new DataResponseVo();
             try
             {
                 using (var tmpconn = new TemporaryCoffinModel(GetSqlConfigData().ProviderConnectionString))
@@ -237,14 +238,17 @@ namespace TemporaryCoffin.Utils
                     {
                         tmpconn.Configuration.AutoDetectChangesEnabled = false;
                         var tmpData = Convert.ToDateTime(value.DataHora);
-                        var tmpquery = await (from t in tmpconn.DadosBus
-                            where t.Longitude <= value.Longitude
-                                  && t.Latitude <= value.Latitude
-                                  && t.DataHora <= tmpData
-                            select t).ToListAsync();
+
+                        // last position of bus
+                        var tmpQUeryBus = await (from t in tmpconn.DadosBus
+                            orderby t.DataHora descending
+                            select t).FirstOrDefaultAsync();
+                        //
+
+                       
 
 
-                        if (!tmpquery.Any())
+                        if (tmpQUeryBus==null)
                         {
                             return new DataResponseVo
                             {
@@ -252,23 +256,29 @@ namespace TemporaryCoffin.Utils
                             };
                         }
 
-                        var resultado = new DataResponseVo
-                        {
-                            ResponseMessage = "BusFound",
-                            ListaPontos = new List<CoordinatesVo>(),
-                            TimeAvg = 0
-                        };
+                        //subtrai mes
+                        var tmpDataLMonth = Convert.ToDateTime(tmpData).AddMonths(-1);
+                        //
+                        // query para obter os dados do ultimo mes
+                        var tmpquery = await (from t in tmpconn.DadosBus
+                                              where t.Longitude == value.Longitude
+                                                    && t.Latitude == value.Latitude
+                                                    && t.DataHora <= tmpDataLMonth
+                                              select t).Take(50).ToListAsync();
+                        //
 
-                        resultado.TimeAvg = await GetMediaDatas(value);
-                        foreach (var item in tmpquery)
-                        {
-                            resultado.ListaPontos.Add(new CoordinatesVo
-                            {
-                                ID = item.ID.ToString(),
-                                LatPos = item.Latitude,
-                                LongPos = item.Longitude
-                            });
-                        }
+                        resultado.ResponseMessage = "BusFound";
+                        resultado.ListaPontos= new List<CoordinatesVo>();
+                        resultado.TimeAvg = 0;
+                       
+
+                       resultado.TimeAvg =  GetMediaDatas(tmpquery);
+                       resultado.ListaPontos.Add(new CoordinatesVo
+                       {
+                           ID = Guid.NewGuid().ToString(),
+                           LatPos = tmpQUeryBus.Latitude,
+                           LongPos = tmpQUeryBus.Longitude
+                       });
 
 
                     }
@@ -290,56 +300,25 @@ namespace TemporaryCoffin.Utils
                     LogManager.WriteError(1000, "Erro TC GetLastBuspos:\n " + e.Message);
                 }
             }
-            return null;
+            return resultado;
         } 
         #endregion
         #region Calculo Medias
-
-        private async Task<double> GetMediaDatas(RequestVO value)
+        /// <summary>
+        /// metodo para devolver a media das datas
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private static double GetMediaDatas(List<BusDataInformation> value)
         {
             var resultado = 0.0;
             try
             {
-                using (var tmpconn = new TemporaryCoffinModel(GetSqlConfigData().ProviderConnectionString))
+                if (value.Any())
                 {
-                    try
-                    {
-                        tmpconn.Configuration.AutoDetectChangesEnabled = false;
-
-
-                        var tmpquery = await (from t in tmpconn.DadosBus
-                                              where t.Longitude <= value.Longitude
-                                                    && t.Latitude <= value.Latitude
-                                                    && t.DataHora == Convert.ToDateTime(value.DataHora)
-                                              select t).FirstOrDefaultAsync();
-
-                        if (tmpquery == null)
-                        {
-                            return resultado;
-                        }
-
-                        var tmpData = Convert.ToDateTime(value.DataHora).AddMonths( - 1);
-
-                        
-                        var tmpDataMedia = await (from t in tmpconn.DadosBus
-                                                      where t.Latitude>=tmpquery.Latitude && t.Longitude>=tmpquery.Longitude
-                                                      && t.Latitude<=value.Latitude && t.Longitude<=value.Longitude
-                                                      && t.DataHora>=tmpData && t.DataHora<=Convert.ToDateTime(value.DataHora)
-                                                      select t).Take(50).ToListAsync();
-
-
-                        if (tmpDataMedia.Any())
-                        {
-                            resultado = tmpDataMedia.Aggregate(resultado, (current, item) => current + item.DataHora.Ticks/current);
-                        }
-
-
-                    }
-                    finally
-                    {
-                        tmpconn.Configuration.AutoDetectChangesEnabled = true;
-                    }
+                    resultado =  value.Aggregate(resultado, (current, item) => current + item.DataHora.Ticks / current);
                 }
+
             }
             catch (Exception e)
             {

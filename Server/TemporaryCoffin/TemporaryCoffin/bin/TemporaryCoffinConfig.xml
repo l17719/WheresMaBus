@@ -682,5 +682,12 @@
             <param name="value"></param>
             <returns></returns>
         </member>
+        <member name="M:TemporaryCoffin.Utils.Utilities.GetMediaDatas(System.Collections.Generic.List{TemporaryCoffin.Models.DbModel.DbData.BusDataInformation})">
+            <summary>
+            metodo para devolver a media das datas
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
     </members>
 </doc>
