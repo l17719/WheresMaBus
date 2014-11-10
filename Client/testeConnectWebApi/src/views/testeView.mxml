@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="teste" xmlns:mx="library://ns.adobe.com/flex/mx">
+	
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.rpc.AsyncToken;
+			import mx.rpc.Responder;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.rpc.http.mxml.HTTPService;
+			
+			private var _tmpHttpService:HTTPService;
+			
+			[Bindable]
+			private var _tmpUserrequest:RequestVO;
+			
+			
+			
+			protected function btnTeste_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var tmpStringLat:String="38,5691873";
+				var tmpStringLong:String="-7,90435690000004";
+				
+				
+				
+				
+				_tmpUserrequest= new RequestVO();
+				_tmpUserrequest.IdUtilizador="98aab9bd-93c4-42e4-b2f6-edc0ac283d3a";
+				_tmpUserrequest.Latitude=38.5691873;
+				
+				_tmpUserrequest.Longitude=-7.90435690000004;
+				var tmpData:Date= new Date();
+				
+				_tmpUserrequest.DataHora=tmpData.fullYear.toString()+"/"+ (tmpData.month+1).toString()+"/"+ tmpData.date.toString()+" "+ tmpData.hours+ ":" + tmpData.minutes+ ":" + tmpData.seconds;
+				
+				
+				_tmpHttpService= new HTTPService();
+				_tmpHttpService.requestTimeout = 300;
+				_tmpHttpService.url= "http://localhost:61765/api/bdata/GetBus/value";
+				_tmpHttpService.method= "POST";
+				_tmpHttpService.headers={Accept:"application/json"}
+				_tmpHttpService.contentType="application/json";
+				_tmpHttpService.resultFormat="text";
+				
+				var tmpToken:AsyncToken= _tmpHttpService.send(JSON.stringify(_tmpUserrequest));
+				tmpToken.addResponder(new mx.rpc.Responder(onTesteOK,onServiceFault));
+			}
+			
+			private function onTesteOK(e:ResultEvent):void
+			{
+				var resultData:Object= JSON.parse(String(e.result));
+				//var tmpDataCoord:Object= resultData.ObterInfoBusResult;
+				var tmpResultado:DataResponseVo= new DataResponseVo();
+				tmpResultado.ResponseMessage= resultData.ResponseMessage;
+				tmpResultado.TimeAvg= Number(resultData.TimeAvg);
+				
+				var tmpArray:Array= resultData.ListaPontos;
+				var tmpDataPonto:ArrayCollection= new ArrayCollection();
+				var i:int=0;
+				var x:int=tmpArray.length;
+				while(i<x){
+					
+					var tmpPontoVo:CoordinatesVo= new CoordinatesVo();
+					tmpPontoVo.ID= tmpArray[i].ID;
+					tmpPontoVo.LatPos= Number(tmpArray[i].LatPos);
+					tmpPontoVo.LongPos= Number(tmpArray[i].LongPos);
+					tmpDataPonto.addItem(tmpPontoVo);
+					tmpPontoVo= null;
+					i++;
+				}
+				tmpResultado.ListaPontos= tmpDataPonto;
+				
+			}
+			
+			private function onServiceFault(e:FaultEvent):void
+			{
+				// TODO Auto Generated method stub
+				
+			}
+			
+			
+			
+		]]>
+	</fx:Script>
+	
+	<s:Button id="btnTeste" label="Connect" click="btnTeste_clickHandler(event)" width="250" height="100"
+			  x="120" y="120"/>
+	<s:TextInput id="txteste" bottom="20" right="20" left="20"/>
+</s:View>

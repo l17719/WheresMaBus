@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="WheresMyBus"
+		initialize="WheresMaBus_initializeHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			import Controller.WMBController;
+			
+			import mx.events.FlexEvent;
+			
+			
+			// variavel para conter a singleton instace do controller
+			private var  instancia:WMBController= WMBController.GetInstance();
+			// 
+			protected function WheresMaBus_initializeHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				var checkGps:Boolean= instancia.ControllercheckGPSAvailable();
+				instancia.ControllerSetGpsAvailableActive(checkGps);
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+</s:View>
