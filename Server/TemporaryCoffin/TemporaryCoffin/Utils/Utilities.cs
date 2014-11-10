@@ -256,6 +256,13 @@ namespace TemporaryCoffin.Utils
                             };
                         }
 
+                        //query para obter o nome da paragem onde o bus se encontra
+                        var tmpQueryParagem = await (from t in tmpconn.DadosParagens
+                            where t.longitude == tmpQUeryBus.Latitude
+                                  && t.longitude == tmpQUeryBus.Longitude
+                            select t.NomeParagem).SingleOrDefaultAsync();
+                        //
+
                         //subtrai mes
                         var tmpDataLMonth = Convert.ToDateTime(tmpData).AddMonths(-1);
                         //
@@ -273,13 +280,15 @@ namespace TemporaryCoffin.Utils
                        
 
                        resultado.TimeAvg =  GetMediaDatas(tmpquery);
-                       resultado.ListaPontos.Add(new CoordinatesVo
+                       //alteracao para conter a paragem
+                        resultado.ListaPontos.Add(new CoordinatesVo
                        {
                            ID = Guid.NewGuid().ToString(),
                            LatPos = tmpQUeryBus.Latitude,
-                           LongPos = tmpQUeryBus.Longitude
+                           LongPos = tmpQUeryBus.Longitude,
+                           NomeParagem = tmpQueryParagem
                        });
-
+                        //
 
                     }
                     finally

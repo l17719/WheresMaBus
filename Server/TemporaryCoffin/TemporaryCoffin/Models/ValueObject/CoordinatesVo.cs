@@ -9,5 +9,6 @@ namespace TemporaryCoffin.Models.ValueObject
         public string ID { get; set; }
         public double LatPos { get; set; }
         public double LongPos { get; set; }
+        public string NomeParagem { get; set; }
     }
 }
