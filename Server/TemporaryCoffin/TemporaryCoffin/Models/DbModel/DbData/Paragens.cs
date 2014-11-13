@@ -15,5 +15,6 @@ namespace TemporaryCoffin.Models.DbModel.DbData
         public double latitude { get; set; }
         public double longitude { get; set; }
         public string NomeParagem { get; set; }
+        public int Ordem { get; set; }
     }
 }

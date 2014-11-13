@@ -13,5 +13,6 @@ namespace TemporaryCoffin.Models.DbModel.DbData
         public double LongInicio { get; set; }
         public double LatFim { get; set; }
         public double LongFim { get; set; }
+
     }
 }

@@ -237,7 +237,7 @@ namespace TemporaryCoffin.Utils
                     try
                     {
                         tmpconn.Configuration.AutoDetectChangesEnabled = false;
-                        var tmpData = Convert.ToDateTime(value.DataHora);
+                        
 
                         // last position of bus
                         var tmpQUeryBus = await (from t in tmpconn.DadosBus
@@ -245,24 +245,59 @@ namespace TemporaryCoffin.Utils
                             select t).FirstOrDefaultAsync();
                         //
 
-                       
-
-
-                        if (tmpQUeryBus==null)
+                        if (tmpQUeryBus == null)
                         {
                             return new DataResponseVo
                             {
-                                ResponseMessage = "NoBus"
+                                ResponseMessage = "NobusFound",
+                                 TimeAvg = 0
+                            };
+                        }
+                        //query para obter o nome da paragem onde o bus se encontra
+                        var tmpQueryParagem = await (from t in tmpconn.DadosParagens
+                                                     where t.longitude == tmpQUeryBus.Latitude
+                                                           && t.longitude == tmpQUeryBus.Longitude
+                                                     select t).SingleOrDefaultAsync();
+                        //
+
+                        //query para obter os dados da paragem onde o user se encontra
+                        var tmpQueryDataUSer = await (from t in tmpconn.DadosParagens
+                                                      where t.latitude == value.Latitude && t.longitude == value.Longitude
+                                                      select t).SingleOrDefaultAsync();
+                        //
+
+                        // verifica se ambas as queries nao sao nulas
+
+                        if (tmpQueryDataUSer == null)
+                        {
+                            // caso null retorna uma vo vazia
+                            return new DataResponseVo
+                            {
+                                ResponseMessage = "NobusFound",
+                                TimeAvg = 0
+                            };
+                        }
+                        // verifica se o valor da ordem do bus > user(esta a frente)
+                        if (tmpQueryParagem.Ordem > tmpQueryDataUSer.Ordem)
+                        {
+                            return new DataResponseVo
+                            {
+                                ResponseMessage = "BusAhead",
+                                ListaPontos = new List<CoordinatesVo>
+                                    {
+                                        new CoordinatesVo
+                                        {
+                                            ID = Guid.NewGuid().ToString(),
+                                            LatPos = tmpQUeryBus.Latitude,
+                                            LongPos = tmpQUeryBus.Longitude,
+                                            NomeParagem = tmpQueryParagem.NomeParagem
+                                        }
+                                    }
                             };
                         }
 
-                        //query para obter o nome da paragem onde o bus se encontra
-                        var tmpQueryParagem = await (from t in tmpconn.DadosParagens
-                            where t.longitude == tmpQUeryBus.Latitude
-                                  && t.longitude == tmpQUeryBus.Longitude
-                            select t.NomeParagem).SingleOrDefaultAsync();
-                        //
-
+                       
+                        var tmpData = Convert.ToDateTime(value.DataHora);
                         //subtrai mes
                         var tmpDataLMonth = Convert.ToDateTime(tmpData).AddMonths(-1);
                         //
@@ -286,7 +321,7 @@ namespace TemporaryCoffin.Utils
                            ID = Guid.NewGuid().ToString(),
                            LatPos = tmpQUeryBus.Latitude,
                            LongPos = tmpQUeryBus.Longitude,
-                           NomeParagem = tmpQueryParagem
+                           NomeParagem = tmpQueryParagem.NomeParagem
                        });
                         //
 
