@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TemporaryCoffin.Models.ValueObject
+﻿namespace TemporaryCoffin.Models.ValueObject
 {
     /// <summary>
     /// 

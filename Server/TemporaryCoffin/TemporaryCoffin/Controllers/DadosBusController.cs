@@ -94,7 +94,7 @@ namespace TemporaryCoffin.Controllers
 
         private static async Task<string> WorkerInfoBus(InfoDataBusVo value)
         {
-            var resultado="";
+            var resultado = "NOK";
             try
             {
                 var tmpTask = Instance.RegisterBusInfo(value);
@@ -104,8 +104,6 @@ namespace TemporaryCoffin.Controllers
             }
             catch (Exception)
             {
-                resultado = "NOK";
-                
                 throw;
             }
             return resultado;

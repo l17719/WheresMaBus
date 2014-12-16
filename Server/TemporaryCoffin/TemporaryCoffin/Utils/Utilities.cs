@@ -254,16 +254,23 @@ namespace TemporaryCoffin.Utils
                             };
                         }
                         //query para obter o nome da paragem onde o bus se encontra
+                        //var tmpQueryParagem = await (from t in tmpconn.DadosParagens
+                        //                             where t.latitude == tmpQUeryBus.Latitude
+                        //                                   && t.longitude == tmpQUeryBus.Longitude
+                        //                             select t).SingleOrDefaultAsync();
                         var tmpQueryParagem = await (from t in tmpconn.DadosParagens
-                                                     where t.longitude == tmpQUeryBus.Latitude
+                                                     where t.latitude == tmpQUeryBus.Latitude
                                                            && t.longitude == tmpQUeryBus.Longitude
-                                                     select t).SingleOrDefaultAsync();
+                                                     select t).FirstOrDefaultAsync();
                         //
 
                         //query para obter os dados da paragem onde o user se encontra
+                        //var tmpQueryDataUSer = await (from t in tmpconn.DadosParagens
+                        //                              where t.latitude == value.Latitude && t.longitude == value.Longitude
+                        //                              select t).SingleOrDefaultAsync();
                         var tmpQueryDataUSer = await (from t in tmpconn.DadosParagens
-                                                      where t.latitude == value.Latitude && t.longitude == value.Longitude
-                                                      select t).SingleOrDefaultAsync();
+                                                      where t.latitude == value.Latitude
+                                                      select t).FirstOrDefaultAsync();
                         //
 
                         // verifica se ambas as queries nao sao nulas
@@ -278,35 +285,35 @@ namespace TemporaryCoffin.Utils
                             };
                         }
                         // verifica se o valor da ordem do bus > user(esta a frente)
-                        if (tmpQueryParagem.Ordem > tmpQueryDataUSer.Ordem)
-                        {
-                            return new DataResponseVo
-                            {
-                                ResponseMessage = "BusAhead",
-                                ListaPontos = new List<CoordinatesVo>
-                                    {
-                                        new CoordinatesVo
-                                        {
-                                            ID = Guid.NewGuid().ToString(),
-                                            LatPos = tmpQUeryBus.Latitude,
-                                            LongPos = tmpQUeryBus.Longitude,
-                                            NomeParagem = tmpQueryParagem.NomeParagem
-                                        }
-                                    }
-                            };
-                        }
+                        //if (tmpQueryParagem.Ordem > tmpQueryDataUSer.Ordem)
+                        //{
+                        //    return new DataResponseVo
+                        //    {
+                        //        ResponseMessage = "BusAhead",
+                        //        ListaPontos = new List<CoordinatesVo>
+                        //            {
+                        //                new CoordinatesVo
+                        //                {
+                        //                    ID = Guid.NewGuid().ToString(),
+                        //                    LatPos = tmpQUeryBus.Latitude,
+                        //                    LongPos = tmpQUeryBus.Longitude,
+                        //                    NomeParagem = tmpQueryParagem.NomeParagem
+                        //                }
+                        //            }
+                        //    };
+                        //}
 
                        
-                        var tmpData = Convert.ToDateTime(value.DataHora);
-                        //subtrai mes
-                        var tmpDataLMonth = Convert.ToDateTime(tmpData).AddMonths(-1);
-                        //
-                        // query para obter os dados do ultimo mes
-                        var tmpquery = await (from t in tmpconn.DadosBus
-                                              where t.Longitude == value.Longitude
-                                                    && t.Latitude == value.Latitude
-                                                    && t.DataHora <= tmpDataLMonth
-                                              select t).Take(50).ToListAsync();
+                        //var tmpData = Convert.ToDateTime(value.DataHora);
+                        ////subtrai mes
+                        //var tmpDataLMonth = Convert.ToDateTime(tmpData).AddMonths(-1);
+                        ////
+                        //// query para obter os dados do ultimo mes
+                        //var tmpquery = await (from t in tmpconn.DadosBus
+                        //                      where t.Longitude == value.Longitude
+                        //                            && t.Latitude == value.Latitude
+                        //                            && t.DataHora <= tmpDataLMonth
+                        //                      select t).Take(50).ToListAsync();
                         //
 
                         resultado.ResponseMessage = "BusFound";
@@ -314,7 +321,8 @@ namespace TemporaryCoffin.Utils
                         resultado.TimeAvg = 0;
                        
 
-                       resultado.TimeAvg =  GetMediaDatas(tmpquery);
+                       //resultado.TimeAvg =  GetMediaDatas(tmpquery);
+                        resultado.TimeAvg = 5;
                        //alteracao para conter a paragem
                         resultado.ListaPontos.Add(new CoordinatesVo
                        {

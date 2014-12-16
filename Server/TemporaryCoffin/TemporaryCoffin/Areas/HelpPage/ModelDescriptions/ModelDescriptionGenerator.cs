@@ -86,6 +86,11 @@ namespace TemporaryCoffin.Areas.HelpPage.ModelDescriptions
 
         private Lazy<IModelDocumentationProvider> _documentationProvider;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="config"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public ModelDescriptionGenerator(HttpConfiguration config)
         {
             if (config == null)
@@ -107,6 +112,13 @@ namespace TemporaryCoffin.Areas.HelpPage.ModelDescriptions
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="modelType"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="InvalidOperationException"></exception>
         public ModelDescription GetOrCreateModelDescription(Type modelType)
         {
             if (modelType == null)
@@ -114,14 +126,14 @@ namespace TemporaryCoffin.Areas.HelpPage.ModelDescriptions
                 throw new ArgumentNullException("modelType");
             }
 
-            Type underlyingType = Nullable.GetUnderlyingType(modelType);
+            var underlyingType = Nullable.GetUnderlyingType(modelType);
             if (underlyingType != null)
             {
                 modelType = underlyingType;
             }
 
             ModelDescription modelDescription;
-            string modelName = ModelNameHelper.GetModelName(modelType);
+            var modelName = ModelNameHelper.GetModelName(modelType);
             if (GeneratedModels.TryGetValue(modelName, out modelDescription))
             {
                 if (modelType != modelDescription.ModelType)
@@ -151,11 +163,11 @@ namespace TemporaryCoffin.Areas.HelpPage.ModelDescriptions
 
             if (modelType.IsGenericType)
             {
-                Type[] genericArguments = modelType.GetGenericArguments();
+                var genericArguments = modelType.GetGenericArguments();
 
                 if (genericArguments.Length == 1)
                 {
-                    Type enumerableType = typeof(IEnumerable<>).MakeGenericType(genericArguments);
+                    var enumerableType = typeof(IEnumerable<>).MakeGenericType(genericArguments);
                     if (enumerableType.IsAssignableFrom(modelType))
                     {
                         return GenerateCollectionModelDescription(modelType, genericArguments[0]);
@@ -163,13 +175,13 @@ namespace TemporaryCoffin.Areas.HelpPage.ModelDescriptions
                 }
                 if (genericArguments.Length == 2)
                 {
-                    Type dictionaryType = typeof(IDictionary<,>).MakeGenericType(genericArguments);
+                    var dictionaryType = typeof(IDictionary<,>).MakeGenericType(genericArguments);
                     if (dictionaryType.IsAssignableFrom(modelType))
                     {
                         return GenerateDictionaryModelDescription(modelType, genericArguments[0], genericArguments[1]);
                     }
 
-                    Type keyValuePairType = typeof(KeyValuePair<,>).MakeGenericType(genericArguments);
+                    var keyValuePairType = typeof(KeyValuePair<,>).MakeGenericType(genericArguments);
                     if (keyValuePairType.IsAssignableFrom(modelType))
                     {
                         return GenerateKeyValuePairModelDescription(modelType, genericArguments[0], genericArguments[1]);
@@ -179,7 +191,7 @@ namespace TemporaryCoffin.Areas.HelpPage.ModelDescriptions
 
             if (modelType.IsArray)
             {
-                Type elementType = modelType.GetElementType();
+                var elementType = modelType.GetElementType();
                 return GenerateCollectionModelDescription(modelType, elementType);
             }
 
@@ -193,30 +205,23 @@ namespace TemporaryCoffin.Areas.HelpPage.ModelDescriptions
                 return GenerateDictionaryModelDescription(modelType, typeof(object), typeof(object));
             }
 
-            if (typeof(IEnumerable).IsAssignableFrom(modelType))
-            {
-                return GenerateCollectionModelDescription(modelType, typeof(object));
-            }
-
-            return GenerateComplexTypeModelDescription(modelType);
+            return typeof(IEnumerable).IsAssignableFrom(modelType) ? GenerateCollectionModelDescription(modelType, typeof(object)) : GenerateComplexTypeModelDescription(modelType);
         }
 
         // Change this to provide different name for the member.
         private static string GetMemberName(MemberInfo member, bool hasDataContractAttribute)
         {
-            JsonPropertyAttribute jsonProperty = member.GetCustomAttribute<JsonPropertyAttribute>();
+            var jsonProperty = member.GetCustomAttribute<JsonPropertyAttribute>();
             if (jsonProperty != null && !String.IsNullOrEmpty(jsonProperty.PropertyName))
             {
                 return jsonProperty.PropertyName;
             }
 
-            if (hasDataContractAttribute)
+            if (!hasDataContractAttribute) return member.Name;
+            var dataMember = member.GetCustomAttribute<DataMemberAttribute>();
+            if (dataMember != null && !String.IsNullOrEmpty(dataMember.Name))
             {
-                DataMemberAttribute dataMember = member.GetCustomAttribute<DataMemberAttribute>();
-                if (dataMember != null && !String.IsNullOrEmpty(dataMember.Name))
-                {
-                    return dataMember.Name;
-                }
+                return dataMember.Name;
             }
 
             return member.Name;
@@ -224,13 +229,13 @@ namespace TemporaryCoffin.Areas.HelpPage.ModelDescriptions
 
         private static bool ShouldDisplayMember(MemberInfo member, bool hasDataContractAttribute)
         {
-            JsonIgnoreAttribute jsonIgnore = member.GetCustomAttribute<JsonIgnoreAttribute>();
-            XmlIgnoreAttribute xmlIgnore = member.GetCustomAttribute<XmlIgnoreAttribute>();
-            IgnoreDataMemberAttribute ignoreDataMember = member.GetCustomAttribute<IgnoreDataMemberAttribute>();
-            NonSerializedAttribute nonSerialized = member.GetCustomAttribute<NonSerializedAttribute>();
+            var jsonIgnore = member.GetCustomAttribute<JsonIgnoreAttribute>();
+            var xmlIgnore = member.GetCustomAttribute<XmlIgnoreAttribute>();
+            var ignoreDataMember = member.GetCustomAttribute<IgnoreDataMemberAttribute>();
+            var nonSerialized = member.GetCustomAttribute<NonSerializedAttribute>();
             ApiExplorerSettingsAttribute apiExplorerSetting = member.GetCustomAttribute<ApiExplorerSettingsAttribute>();
 
-            bool hasMemberAttribute = member.DeclaringType.IsEnum ?
+            var hasMemberAttribute = member.DeclaringType.IsEnum ?
                 member.GetCustomAttribute<EnumMemberAttribute>() != null :
                 member.GetCustomAttribute<DataMemberAttribute>() != null;
 
@@ -266,7 +271,7 @@ namespace TemporaryCoffin.Areas.HelpPage.ModelDescriptions
 
         private void GenerateAnnotations(MemberInfo property, ParameterDescription propertyModel)
         {
-            List<ParameterAnnotation> annotations = new List<ParameterAnnotation>();
+            var annotations = new List<ParameterAnnotation>();
 
             IEnumerable<Attribute> attributes = property.GetCustomAttributes();
             foreach (Attribute attribute in attributes)
@@ -300,7 +305,7 @@ namespace TemporaryCoffin.Areas.HelpPage.ModelDescriptions
                 return String.Compare(x.Documentation, y.Documentation, StringComparison.OrdinalIgnoreCase);
             });
 
-            foreach (ParameterAnnotation annotation in annotations)
+            foreach (var annotation in annotations)
             {
                 propertyModel.Annotations.Add(annotation);
             }
@@ -308,7 +313,7 @@ namespace TemporaryCoffin.Areas.HelpPage.ModelDescriptions
 
         private CollectionModelDescription GenerateCollectionModelDescription(Type modelType, Type elementType)
         {
-            ModelDescription collectionModelDescription = GetOrCreateModelDescription(elementType);
+            var collectionModelDescription = GetOrCreateModelDescription(elementType);
             if (collectionModelDescription != null)
             {
                 return new CollectionModelDescription
@@ -324,7 +329,7 @@ namespace TemporaryCoffin.Areas.HelpPage.ModelDescriptions
 
         private ModelDescription GenerateComplexTypeModelDescription(Type modelType)
         {
-            ComplexTypeModelDescription complexModelDescription = new ComplexTypeModelDescription
+            var complexModelDescription = new ComplexTypeModelDescription
             {
                 Name = ModelNameHelper.GetModelName(modelType),
                 ModelType = modelType,
@@ -332,46 +337,42 @@ namespace TemporaryCoffin.Areas.HelpPage.ModelDescriptions
             };
 
             GeneratedModels.Add(complexModelDescription.Name, complexModelDescription);
-            bool hasDataContractAttribute = modelType.GetCustomAttribute<DataContractAttribute>() != null;
-            PropertyInfo[] properties = modelType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            foreach (PropertyInfo property in properties)
+            var hasDataContractAttribute = modelType.GetCustomAttribute<DataContractAttribute>() != null;
+            var properties = modelType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            foreach (var property in properties)
             {
-                if (ShouldDisplayMember(property, hasDataContractAttribute))
+                if (!ShouldDisplayMember(property, hasDataContractAttribute)) continue;
+                var propertyModel = new ParameterDescription
                 {
-                    ParameterDescription propertyModel = new ParameterDescription
-                    {
-                        Name = GetMemberName(property, hasDataContractAttribute)
-                    };
+                    Name = GetMemberName(property, hasDataContractAttribute)
+                };
 
-                    if (DocumentationProvider != null)
-                    {
-                        propertyModel.Documentation = DocumentationProvider.GetDocumentation(property);
-                    }
-
-                    GenerateAnnotations(property, propertyModel);
-                    complexModelDescription.Properties.Add(propertyModel);
-                    propertyModel.TypeDescription = GetOrCreateModelDescription(property.PropertyType);
+                if (DocumentationProvider != null)
+                {
+                    propertyModel.Documentation = DocumentationProvider.GetDocumentation(property);
                 }
+
+                GenerateAnnotations(property, propertyModel);
+                complexModelDescription.Properties.Add(propertyModel);
+                propertyModel.TypeDescription = GetOrCreateModelDescription(property.PropertyType);
             }
 
-            FieldInfo[] fields = modelType.GetFields(BindingFlags.Public | BindingFlags.Instance);
-            foreach (FieldInfo field in fields)
+            var fields = modelType.GetFields(BindingFlags.Public | BindingFlags.Instance);
+            foreach (var field in fields)
             {
-                if (ShouldDisplayMember(field, hasDataContractAttribute))
+                if (!ShouldDisplayMember(field, hasDataContractAttribute)) continue;
+                var propertyModel = new ParameterDescription
                 {
-                    ParameterDescription propertyModel = new ParameterDescription
-                    {
-                        Name = GetMemberName(field, hasDataContractAttribute)
-                    };
+                    Name = GetMemberName(field, hasDataContractAttribute)
+                };
 
-                    if (DocumentationProvider != null)
-                    {
-                        propertyModel.Documentation = DocumentationProvider.GetDocumentation(field);
-                    }
-
-                    complexModelDescription.Properties.Add(propertyModel);
-                    propertyModel.TypeDescription = GetOrCreateModelDescription(field.FieldType);
+                if (DocumentationProvider != null)
+                {
+                    propertyModel.Documentation = DocumentationProvider.GetDocumentation(field);
                 }
+
+                complexModelDescription.Properties.Add(propertyModel);
+                propertyModel.TypeDescription = GetOrCreateModelDescription(field.FieldType);
             }
 
             return complexModelDescription;
@@ -379,8 +380,8 @@ namespace TemporaryCoffin.Areas.HelpPage.ModelDescriptions
 
         private DictionaryModelDescription GenerateDictionaryModelDescription(Type modelType, Type keyType, Type valueType)
         {
-            ModelDescription keyModelDescription = GetOrCreateModelDescription(keyType);
-            ModelDescription valueModelDescription = GetOrCreateModelDescription(valueType);
+            var keyModelDescription = GetOrCreateModelDescription(keyType);
+            var valueModelDescription = GetOrCreateModelDescription(valueType);
 
             return new DictionaryModelDescription
             {
@@ -399,22 +400,20 @@ namespace TemporaryCoffin.Areas.HelpPage.ModelDescriptions
                 ModelType = modelType,
                 Documentation = CreateDefaultDocumentation(modelType)
             };
-            bool hasDataContractAttribute = modelType.GetCustomAttribute<DataContractAttribute>() != null;
-            foreach (FieldInfo field in modelType.GetFields(BindingFlags.Public | BindingFlags.Static))
+            var hasDataContractAttribute = modelType.GetCustomAttribute<DataContractAttribute>() != null;
+            foreach (var field in modelType.GetFields(BindingFlags.Public | BindingFlags.Static))
             {
-                if (ShouldDisplayMember(field, hasDataContractAttribute))
+                if (!ShouldDisplayMember(field, hasDataContractAttribute)) continue;
+                var enumValue = new EnumValueDescription
                 {
-                    EnumValueDescription enumValue = new EnumValueDescription
-                    {
-                        Name = field.Name,
-                        Value = field.GetRawConstantValue().ToString()
-                    };
-                    if (DocumentationProvider != null)
-                    {
-                        enumValue.Documentation = DocumentationProvider.GetDocumentation(field);
-                    }
-                    enumDescription.Values.Add(enumValue);
+                    Name = field.Name,
+                    Value = field.GetRawConstantValue().ToString()
+                };
+                if (DocumentationProvider != null)
+                {
+                    enumValue.Documentation = DocumentationProvider.GetDocumentation(field);
                 }
+                enumDescription.Values.Add(enumValue);
             }
             GeneratedModels.Add(enumDescription.Name, enumDescription);
 
@@ -423,8 +422,8 @@ namespace TemporaryCoffin.Areas.HelpPage.ModelDescriptions
 
         private KeyValuePairModelDescription GenerateKeyValuePairModelDescription(Type modelType, Type keyType, Type valueType)
         {
-            ModelDescription keyModelDescription = GetOrCreateModelDescription(keyType);
-            ModelDescription valueModelDescription = GetOrCreateModelDescription(valueType);
+            var keyModelDescription = GetOrCreateModelDescription(keyType);
+            var valueModelDescription = GetOrCreateModelDescription(valueType);
 
             return new KeyValuePairModelDescription
             {
@@ -437,7 +436,7 @@ namespace TemporaryCoffin.Areas.HelpPage.ModelDescriptions
 
         private ModelDescription GenerateSimpleTypeModelDescription(Type modelType)
         {
-            SimpleTypeModelDescription simpleModelDescription = new SimpleTypeModelDescription
+            var simpleModelDescription = new SimpleTypeModelDescription
             {
                 Name = ModelNameHelper.GetModelName(modelType),
                 ModelType = modelType,

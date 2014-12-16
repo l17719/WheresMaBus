@@ -4,8 +4,15 @@ using System.Web.Routing;
 
 namespace TemporaryCoffin
 {
+    /// <summary>
+    /// Classe de configuracao da framewwork (webapi)
+    /// </summary>
     public class RouteConfig
     {
+        /// <summary>
+        /// metodo para registar as rotas
+        /// </summary>
+        /// <param name="routes"></param>
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");

@@ -4,7 +4,51 @@
         <name>TemporaryCoffin</name>
     </assembly>
     <members>
+        <member name="T:TemporaryCoffin.BundleConfig">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:TemporaryCoffin.BundleConfig.RegisterBundles(System.Web.Optimization.BundleCollection)">
+            <summary>
+            
+            </summary>
+            <param name="bundles"></param>
+        </member>
+        <member name="T:TemporaryCoffin.FilterConfig">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:TemporaryCoffin.FilterConfig.RegisterGlobalFilters(System.Web.Mvc.GlobalFilterCollection)">
+            <summary>
+            
+            </summary>
+            <param name="filters"></param>
+        </member>
+        <member name="T:TemporaryCoffin.RouteConfig">
+            <summary>
+            Classe de configuracao da framewwork (webapi)
+            </summary>
+        </member>
+        <member name="M:TemporaryCoffin.RouteConfig.RegisterRoutes(System.Web.Routing.RouteCollection)">
+            <summary>
+            metodo para registar as rotas
+            </summary>
+            <param name="routes"></param>
+        </member>
         <member name="T:TemporaryCoffin.WebApiConfig">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:TemporaryCoffin.WebApiConfig.Register(System.Web.Http.HttpConfiguration)">
+            <summary>
+            
+            </summary>
+            <param name="config"></param>
+        </member>
+        <member name="T:TemporaryCoffin.Areas.HelpPage.ApiDescriptionExtensions">
             <summary>
             
             </summary>
@@ -23,9 +67,61 @@
             or you can provide the samples for the requests/responses.
             </summary>
         </member>
+        <member name="M:TemporaryCoffin.Areas.HelpPage.HelpPageConfig.Register(System.Web.Http.HttpConfiguration)">
+            <summary>
+            
+            </summary>
+            <param name="config"></param>
+        </member>
         <member name="T:TemporaryCoffin.Areas.HelpPage.Controllers.HelpController">
             <summary>
             The controller that will handle requests for the help page.
+            </summary>
+        </member>
+        <member name="M:TemporaryCoffin.Areas.HelpPage.Controllers.HelpController.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:TemporaryCoffin.Areas.HelpPage.Controllers.HelpController.#ctor(System.Web.Http.HttpConfiguration)">
+            <summary>
+            
+            </summary>
+            <param name="config"></param>
+        </member>
+        <member name="M:TemporaryCoffin.Areas.HelpPage.Controllers.HelpController.Index">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TemporaryCoffin.Areas.HelpPage.Controllers.HelpController.Api(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="apiId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TemporaryCoffin.Areas.HelpPage.Controllers.HelpController.ResourceModel(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="modelName"></param>
+            <returns></returns>
+        </member>
+        <member name="P:TemporaryCoffin.Areas.HelpPage.Controllers.HelpController.Configuration">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:TemporaryCoffin.Areas.HelpPage.HelpPageAreaRegistration">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:TemporaryCoffin.Areas.HelpPage.HelpPageConfigurationExtensions">
+            <summary>
+            
             </summary>
         </member>
         <member name="M:TemporaryCoffin.Areas.HelpPage.HelpPageConfigurationExtensions.SetDocumentationProvider(System.Web.Http.HttpConfiguration,System.Web.Http.Description.IDocumentationProvider)">
@@ -174,9 +270,24 @@
             An <see cref="T:TemporaryCoffin.Areas.HelpPage.Models.HelpPageApiModel"/>
             </returns>
         </member>
+        <member name="T:TemporaryCoffin.Areas.HelpPage.ModelDescriptions.CollectionModelDescription">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="T:TemporaryCoffin.Areas.HelpPage.ModelDescriptions.ModelDescription">
             <summary>
             Describes a type model.
+            </summary>
+        </member>
+        <member name="T:TemporaryCoffin.Areas.HelpPage.ModelDescriptions.ComplexTypeModelDescription">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:TemporaryCoffin.Areas.HelpPage.ModelDescriptions.ComplexTypeModelDescription.#ctor">
+            <summary>
+            
             </summary>
         </member>
         <member name="T:TemporaryCoffin.Areas.HelpPage.ModelDescriptions.ModelDescriptionGenerator">
@@ -184,9 +295,30 @@
             Generates model descriptions for given types.
             </summary>
         </member>
+        <member name="M:TemporaryCoffin.Areas.HelpPage.ModelDescriptions.ModelDescriptionGenerator.#ctor(System.Web.Http.HttpConfiguration)">
+            <summary>
+            
+            </summary>
+            <param name="config"></param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:TemporaryCoffin.Areas.HelpPage.ModelDescriptions.ModelDescriptionGenerator.GetOrCreateModelDescription(System.Type)">
+            <summary>
+            
+            </summary>
+            <param name="modelType"></param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
         <member name="T:TemporaryCoffin.Areas.HelpPage.ModelDescriptions.ModelNameAttribute">
             <summary>
             Use this attribute to change the name of the <see cref="T:TemporaryCoffin.Areas.HelpPage.ModelDescriptions.ModelDescription"/> generated for a type.
+            </summary>
+        </member>
+        <member name="T:TemporaryCoffin.Areas.HelpPage.ModelDescriptions.ParameterDescription">
+            <summary>
+            
             </summary>
         </member>
         <member name="T:TemporaryCoffin.Areas.HelpPage.Models.HelpPageApiModel">
@@ -446,21 +578,26 @@
         </member>
         <member name="T:TemporaryCoffin.Areas.HelpPage.ObjectGenerator">
             <summary>
-            This class will create an object of a given type and populate it with sample data.
+                This class will create an object of a given type and populate it with sample data.
             </summary>
         </member>
         <member name="M:TemporaryCoffin.Areas.HelpPage.ObjectGenerator.GenerateObject(System.Type)">
             <summary>
-            Generates an object for a given type. The type needs to be public, have a public default constructor and settable public properties/fields. Currently it supports the following types:
-            Simple types: <see cref="T:System.Int32"/>, <see cref="T:System.String"/>, <see cref="T:System.Enum"/>, <see cref="T:System.DateTime"/>, <see cref="T:System.Uri"/>, etc.
-            Complex types: POCO types.
-            Nullables: <see cref="T:System.Nullable`1"/>.
-            Arrays: arrays of simple types or complex types.
-            Key value pairs: <see cref="T:System.Collections.Generic.KeyValuePair`2"/>
-            Tuples: <see cref="T:System.Tuple`1"/>, <see cref="T:System.Tuple`2"/>, etc
-            Dictionaries: <see cref="T:System.Collections.Generic.IDictionary`2"/> or anything deriving from <see cref="T:System.Collections.Generic.IDictionary`2"/>.
-            Collections: <see cref="T:System.Collections.Generic.IList`1"/>, <see cref="T:System.Collections.Generic.IEnumerable`1"/>, <see cref="T:System.Collections.Generic.ICollection`1"/>, <see cref="T:System.Collections.IList"/>, <see cref="T:System.Collections.IEnumerable"/>, <see cref="T:System.Collections.ICollection"/> or anything deriving from <see cref="T:System.Collections.Generic.ICollection`1"/> or <see cref="T:System.Collections.IList"/>.
-            Queryables: <see cref="T:System.Linq.IQueryable"/>, <see cref="T:System.Linq.IQueryable`1"/>.
+                Generates an object for a given type. The type needs to be public, have a public default constructor and settable
+                public properties/fields. Currently it supports the following types:
+                Simple types: <see cref="T:System.Int32"/>, <see cref="T:System.String"/>, <see cref="T:System.Enum"/>, <see cref="T:System.DateTime"/>,
+                <see cref="T:System.Uri"/>, etc.
+                Complex types: POCO types.
+                Nullables: <see cref="T:System.Nullable`1"/>.
+                Arrays: arrays of simple types or complex types.
+                Key value pairs: <see cref="T:System.Collections.Generic.KeyValuePair`2"/>
+                Tuples: <see cref="T:System.Tuple`1"/>, <see cref="T:System.Tuple`2"/>, etc
+                Dictionaries: <see cref="T:System.Collections.Generic.IDictionary`2"/> or anything deriving from
+                <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+                Collections: <see cref="T:System.Collections.Generic.IList`1"/>, <see cref="T:System.Collections.Generic.IEnumerable`1"/>, <see cref="T:System.Collections.Generic.ICollection`1"/>,
+                <see cref="T:System.Collections.IList"/>, <see cref="T:System.Collections.IEnumerable"/>, <see cref="T:System.Collections.ICollection"/> or anything deriving from
+                <see cref="T:System.Collections.Generic.ICollection`1"/> or <see cref="T:System.Collections.IList"/>.
+                Queryables: <see cref="T:System.Linq.IQueryable"/>, <see cref="T:System.Linq.IQueryable`1"/>.
             </summary>
             <param name="type">The type.</param>
             <returns>An object of the given type.</returns>
@@ -485,6 +622,20 @@
             Initializes a new instance of the <see cref="T:TemporaryCoffin.Areas.HelpPage.XmlDocumentationProvider"/> class.
             </summary>
             <param name="documentPath">The physical path to XML document.</param>
+        </member>
+        <member name="M:TemporaryCoffin.Areas.HelpPage.XmlDocumentationProvider.GetDocumentation(System.Reflection.MemberInfo)">
+            <summary>
+            
+            </summary>
+            <param name="member"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TemporaryCoffin.Areas.HelpPage.XmlDocumentationProvider.GetDocumentation(System.Type)">
+            <summary>
+            
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
         </member>
         <member name="T:TemporaryCoffin.Controllers.DadosBusController">
             <summary>
@@ -523,6 +674,36 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:TemporaryCoffin.Controllers.UserController">
+            <summary>
+            Controller para o user
+            </summary>
+        </member>
+        <member name="T:TemporaryCoffin.Models.DbModel.DbData.BusDataInformation">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:TemporaryCoffin.Models.DbModel.DbData.BusDataInformation.ID">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:TemporaryCoffin.Models.DbModel.DbData.BusDataInformation.Latitude">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:TemporaryCoffin.Models.DbModel.DbData.BusDataInformation.Longitude">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:TemporaryCoffin.Models.DbModel.DbData.BusDataInformation.DataHora">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="T:TemporaryCoffin.Models.DbModel.DbData.Linha">
             <summary>
             
@@ -533,7 +714,57 @@
             
             </summary>
         </member>
+        <member name="T:TemporaryCoffin.Models.DbModel.DbData.Mapping.LinhaMapping">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:TemporaryCoffin.Models.DbModel.DbData.Mapping.LinhaMapping.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:TemporaryCoffin.Models.DbModel.DbData.Mapping.ParagensMapping">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:TemporaryCoffin.Models.DbModel.DbData.Mapping.ParagensMapping.#ctor">
+            <summary>
+            ctor
+            </summary>
+        </member>
         <member name="T:TemporaryCoffin.Models.DbModel.DbData.Paragens">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:TemporaryCoffin.Models.DbModel.DbData.Paragens.ID">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:TemporaryCoffin.Models.DbModel.DbData.Paragens.IdLinha">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:TemporaryCoffin.Models.DbModel.DbData.Paragens.latitude">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:TemporaryCoffin.Models.DbModel.DbData.Paragens.longitude">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:TemporaryCoffin.Models.DbModel.DbData.Paragens.NomeParagem">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:TemporaryCoffin.Models.DbModel.DbData.Paragens.Ordem">
             <summary>
             
             </summary>

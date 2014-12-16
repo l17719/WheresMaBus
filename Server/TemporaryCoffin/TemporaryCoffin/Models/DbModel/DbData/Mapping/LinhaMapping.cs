@@ -2,8 +2,14 @@
 
 namespace TemporaryCoffin.Models.DbModel.DbData.Mapping
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class LinhaMapping:EntityTypeConfiguration<Linha>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public LinhaMapping()
         {
             HasKey(t => t.ID);

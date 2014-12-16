@@ -1,8 +1,10 @@
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace TemporaryCoffin.Areas.HelpPage.ModelDescriptions
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class ParameterDescription
     {
         public ParameterDescription()

@@ -3,6 +3,9 @@ using System.Web.Mvc;
 
 namespace TemporaryCoffin.Areas.HelpPage
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class HelpPageAreaRegistration : AreaRegistration
     {
         public override string AreaName
