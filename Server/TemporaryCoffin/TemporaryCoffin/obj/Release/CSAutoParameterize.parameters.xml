@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="Dbconnection-Web.config Connection String" description="Dbconnection Connection String used in web.config by the application to access the database." defaultValue="Data Source=URIEL\SQLEXPRESS;Initial Catalog=WMBDB;Trusted_Connection=True; MultipleActiveResultSets=True" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\joao\\Documents\\Visual\ Studio\ 2013\\Projects\\Repo\\Server\\TemporaryCoffin\\TemporaryCoffin\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='Dbconnection']/@connectionString" />
+  </parameter>
+  <parameter name="TemporaryCoffin.Models.DbModel.TemporaryCoffinModel-Web.config Connection String" description="TemporaryCoffin.Models.DbModel.TemporaryCoffinModel Connection String used in web.config by the application to access the database." defaultValue="TemporaryCoffin.Models.DbModel.TemporaryCoffinModel_ConnectionString" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\joao\\Documents\\Visual\ Studio\ 2013\\Projects\\Repo\\Server\\TemporaryCoffin\\TemporaryCoffin\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='TemporaryCoffin.Models.DbModel.TemporaryCoffinModel']/@connectionString" />
+  </parameter>
+</parameters>

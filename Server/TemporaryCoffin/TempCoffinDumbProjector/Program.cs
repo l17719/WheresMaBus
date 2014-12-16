@@ -249,7 +249,10 @@ namespace TempCoffinDumbProjector
                 //
 
 
-                var restClient = new RestClient("http://localhost:61765");
+                //dummy location var restClient = new RestClient("http://localhost:61765");
+                // server location
+                var restClient = new RestClient("http://localhost:8080/WMB");
+                //
                 var req = new RestRequest("/api/bdata/c/value", Method.POST)
                 {
                     RequestFormat = DataFormat.Json,
