@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="About"
+		creationComplete="WMBAboutView_creationCompleteHandler(event)"
+		destructionPolicy="auto"
+		viewDeactivate="WMBAboutView_viewDeactivateHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import spark.components.supportClasses.StyleableTextField;
+			import spark.events.ViewNavigatorEvent;
+			
+			
+			private var apiVersion:String = "7.1.5_MQ_MOBILE";
+			private var fxSdkVersion:String = "Apache Flex 4.13.0";
+			private var appVersion:String = "0.0.1";
+			
+			[Bindable]
+			private var tmpstr:String;
+			[Bindable]
+			private var tmptf:TextField;
+			private var fontSize:int = 16;
+			
+			protected function WMBAboutView_creationCompleteHandler(event:FlexEvent):void
+			{
+				if (this.parentApplication.applicationDPI != 160) this.fontSize = 26;
+				
+				
+				
+				
+				tmpstr = "<font color='#000000'size='" + this.fontSize +"'>Esta aplicação foi construida usando a versão " + this.apiVersion + " de MapQuest Mobile Flash Maps API, disponivel </font><a href='http://developer.mapquest.com/web/products/featured/as3-flex-flash-mobile'><font color='#037ECC' size='" + (this.fontSize + 2) + "'><b>aqui</b></font><font color='#000000'size='" + this.fontSize + "'>.</font></a><br/><br/>";
+				
+				//tmpstr += "<font color='#000000'size='" + this.fontSize + "'>It is provided as a showcase of just a few of the capabilities available through the MapQuest Platform.</font><br/><br/>";
+				
+				tmpstr += "<font color='#000000'size='" + this.fontSize + "'>O código fonte desta aplicação encontra-se disponivel em <a href='https://github.com/l17719/WheresMaBus'><font color='#037ECC' size='" + (this.fontSize + 2) + "'><b>GitHub Page</b></font></a><font color='#000000'size='" + this.fontSize + "'>.</font>";
+				
+				tmpstr += "<br/><font color='#000000'size='" + this.fontSize + "'>Esta é uma versão proof of concept e será constantemente actualizada quando possível, ficamos a aguardar o vosso feedback em <a href='http://tudoemcasa.no-ip.info/WMB/index.html' size='" + (this.fontSize + 2) + "'><b>Developper Page</b></font></a><font color='#000000'size='" + this.fontSize + "'>.</font>";
+				
+				
+				tmpstr += "<font color='#000000'size='" + String(this.fontSize - 4) + "'><br><br>Versão da app: " + this.appVersion + "</font><br>";
+				tmpstr += "<font color='#000000'size='" + String(this.fontSize - 4) + "'>MQ Mobile API version: " + this.apiVersion + "</font><br>";
+				tmpstr += "<font color='#000000'size='" + String(this.fontSize - 4 ) + "'>Flex SDK version: " + getAppVersion() + "</font><br>";
+				
+				StyleableTextField(this.taInfo.textDisplay).htmlText = tmpstr;
+				
+			}
+			
+			protected function WMBAboutView_viewDeactivateHandler(event:ViewNavigatorEvent):void
+			{
+				// TODO Auto-generated method stub
+				tmpstr=null;
+				tmptf=null;
+			}
+			
+			private function getAppVersion():String {
+				var x:String= NativeApplication.nativeApplication.runtimeVersion;
+				return x;
+			}
+			
+		]]>
+	</fx:Script>
+	
+	
+	
+	<s:Scroller width="100%" height="100%" left="7" right="7" top="10" bottom="10">
+		<s:VGroup>
+			<s:TextArea id="taInfo" selectable="true" editable="false" skinClass="spark.skins.mobile.TextAreaSkin"
+						height="100%" width="100%"/>
+		</s:VGroup>
+	</s:Scroller>
+</s:View>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   width="800" height="600" backgroundAlpha="0.41"
+			   backgroundColor="#6666FF"
+			   contentCreationComplete="WMB_contentCreationCompleteHandler(event)">
+	<fx:Style source="WMB.css"/>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<!--<s:layout>
+		<s:ConstraintLayout>
+			<s:constraintColumns>
+				<s:ConstraintColumn id="leftPaddingColumn" width="5"/>
+				<s:ConstraintColumn id="iconColumn" width="32"/>
+				<s:ConstraintColumn id="middleGapColumn" width="3"/>
+				<s:ConstraintColumn id="textColumn" width="100%"/>
+				<s:ConstraintColumn id="rightPaddingColumn" width="5"/>
+			</s:constraintColumns>
+			<s:constraintRows>
+				<s:ConstraintRow id="topPaddingRow" height="10"/>
+				<s:ConstraintRow id="firstRow" height="16"/>
+				<s:ConstraintRow id="secondRow" height="16"/>
+				<s:ConstraintRow id="bottomPaddingRow" height="10"/>
+			</s:constraintRows>
+		</s:ConstraintLayout>
+	</s:layout>-->
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			
+			
+			protected function WMB_contentCreationCompleteHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+				
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:BitmapImage id="bitimgQR" x="285" y="107" width="250" height="250" smooth="true"
+				   smoothingQuality="high" source="Assets/qrcode.png"/>
+	<s:Label id="phoneNumberLabel" x="208" y="421" fontSize="36" text="UNDER CONSTRUCTION"/>
+</s:Application>

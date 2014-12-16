@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SkinnablePopUpContainer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+						   xmlns:s="library://ns.adobe.com/flex/spark"
+						   creationComplete="popup_creationCompleteHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.core.FlexGlobals;
+			
+			[Bindable]
+			private var _alertMsg:String;
+
+			[Bindable]
+			private var _alertTitle:String;
+			
+			[Bindable]
+			public function get alertTitle():String
+			{
+				return _alertTitle;
+			}
+			
+			public function set alertTitle(value:String):void
+			{
+				_alertTitle = value;
+			}
+			[Bindable]
+			public function get alertMsg():String
+			{
+				return _alertMsg;
+			}
+			
+			public function set alertMsg(value:String):void
+			{
+				_alertMsg = value;
+			}
+
+			[Bindable]
+			private var app:Object= FlexGlobals.topLevelApplication;
+			
+			protected function popup_creationCompleteHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				if (AlertTwindow!=null){
+					AlertTwindow.closeButton.visible= false;
+				}
+				
+				/* this.x=(app.width)-(this.width/2);
+				this.y=(app.height)-(this.height/2); */
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	
+	<s:TitleWindow  title="{alertTitle}" id="AlertTwindow" >
+		
+	
+		<s:VGroup horizontalAlign="center"
+				  paddingTop="8" paddingBottom="9"
+				  paddingRight="8" paddingLeft="8">
+			
+			<s:Label text="{alertMsg}" textAlign="center"/>
+			<s:Button label="OK" click="this.close()"/>
+		</s:VGroup>
+		
+	</s:TitleWindow>
+</s:SkinnablePopUpContainer>
