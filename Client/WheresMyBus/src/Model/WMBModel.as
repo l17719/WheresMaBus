@@ -9,8 +9,7 @@ package Model
 	{
 		
 		
-		//variavel para conter os dados da appkey
-		private var appKey:String="Fmjtd%7Cluurnuubng%2C8w%3Do5-9wrxga";
+		
 		
 		// variavel de instancia para conter a instacia do service
 		private var instanciaService:WMBService= WMBService.GetInstance();
@@ -23,6 +22,9 @@ package Model
 		private static var _instance:WMBModel;
 		
 		
+		
+		private var _ServiceOnline:Boolean;
+		
 		public function ModelCheckOnlineService():void
 		{
 			// TODO Auto Generated method stub
@@ -32,7 +34,7 @@ package Model
 		public function ModelGetMyCoordinates():void
 		{
 			// TODO Auto Generated method stub
-			
+			instanciaService.ServiceGetMyCoordinates();
 		}
 		
 		public function ModelgetMapData():void
@@ -73,6 +75,15 @@ package Model
 		}
 		
 		
+		
+		public function SetServiceOnline(value:Boolean):void{
+			_ServiceOnline= value;
+		}
+		public function GetServiceOnline():Boolean{
+			return _ServiceOnline;
+		}
+		
+		
 		public function ModelcheckGPSAvailable():Boolean
 		{
 			// TODO Auto Generated method stub
@@ -95,11 +106,7 @@ package Model
 			return GPSAvailable;
 		}
 		
-		public function ModelObtemChave():String
-		{
-			// TODO Auto Generated method stub
-			return appKey;
-		}
+		
 		
 		public function ModelSetMyCoordinates(tmpdata:RequestVO):void
 		{

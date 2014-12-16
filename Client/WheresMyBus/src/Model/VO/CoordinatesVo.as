@@ -1,7 +1,7 @@
 package Model.VO
 {
 	[Bindable]
-	[RemoteClass(alias="TemporaryCoffin.Models.ValueObject.CoordinatesVo"]
+	[RemoteClass(alias="TemporaryCoffin.Models.ValueObject.CoordinatesVo")]
 	public class CoordinatesVo
 	{
 		
@@ -9,9 +9,19 @@ package Model.VO
 		private var _ID:String;
 		private var _LatPos:Number;
 		private var _LongPos:Number;
-		
+		private var _NomeParagem:String;
 		public function CoordinatesVo()
 		{
+		}
+
+		public function get NomeParagem():String
+		{
+			return _NomeParagem;
+		}
+
+		public function set NomeParagem(value:String):void
+		{
+			_NomeParagem = value;
 		}
 
 		public function get LongPos():Number

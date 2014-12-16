@@ -8,19 +8,19 @@ package Model.VO
 	{
 		private var _ResponseMessage:String;
 		private var _TimeAvg:Number;
-		private var _ListaPontos:Vector.<CoordinatesVo>;
+		private var _ListaPontos:ArrayCollection;
 		
 		
 		public function DataResponseVo()
 		{
 		}
 
-		public function get ListaPontos():Vector.<CoordinatesVo>
+		public function get ListaPontos():ArrayCollection
 		{
 			return _ListaPontos;
 		}
 
-		public function set ListaPontos(value:Vector.<CoordinatesVo>):void
+		public function set ListaPontos(value:ArrayCollection):void
 		{
 			_ListaPontos = value;
 		}

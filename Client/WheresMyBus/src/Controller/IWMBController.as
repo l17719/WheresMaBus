@@ -11,7 +11,8 @@ package Controller
 		function ControllerCheckOnlineService():void;
 		function ControllerSetGpsAvailableActive(value:Boolean):void;
 		function ControllerGetGpsAvailableActive():Boolean;
-		function ControllerObtemChave():String;
+		function ControllerGetServiceOnline():Boolean;
+		function ControllerSetServiceOnline(value:Boolean):void;
 		function ControllerSetMyCoordinates(value:RequestVO):void;
 	}
 }

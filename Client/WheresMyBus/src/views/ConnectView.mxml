@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		title="Conectividade"
+		destructionPolicy="auto">
+	
+	<fx:Script>
+		<![CDATA[
+			import Controller.WMBController;
+			
+			import Eventos.EventoRemoteService;
+			
+			import Service.WMBService;
+			
+			import Utils.Utilities;
+			
+			import mx.formatters.DateFormatter;
+			
+			private var _instanciaService:WMBService= WMBService.GetInstance();
+			
+			private var _instanceUtils:Utilities= Utilities.GetInstance();
+			
+			
+			// variavel para conter a singleton instace do controller
+			private var  _instancia:WMBController= WMBController.GetInstance();
+			//
+			
+			protected function btnTesteConnect_clickHandler(event:MouseEvent):void
+			{
+				_instanciaService.addEventListener(EventoRemoteService.ServiceOk,onConnectOK,false,0,true);
+				_instanciaService.addEventListener(EventoRemoteService.ServiceNOK,onFault,false,0,true);
+				
+				if (txtANOGPS.text==""){
+					txtANOGPS.text=_instanceUtils.FormatDate()+"\n A contactar o serviço aguarde por favor!";
+				}
+				else{
+					txtANOGPS.text+="\n"+_instanceUtils.FormatDate()+"\n A contactar o serviço aguarde por favor!";
+				}
+				_instancia.ControllerCheckOnlineService();
+			}
+			
+			private function onConnectOK(e:EventoRemoteService):void{
+				_instanciaService.removeEventListener(EventoRemoteService.ServiceOk,onConnectOK);
+				_instanciaService.removeEventListener(EventoRemoteService.ServiceOk,onConnectOK);
+				var tmpstr:String=e._data as String;
+				if (tmpstr=="DataOk"){
+					if (txtANOGPS.text==""){
+						txtANOGPS.text=_instanceUtils.FormatDate()+"\n Uff esta a funcionar!";
+					}
+					else{
+						txtANOGPS.text+="\n"+txtANOGPS.text+"\n Uff esta a funcionar!";
+					}
+					_instancia.ControllerSetServiceOnline(true);
+				}
+			}
+			private function onFault(e:EventoRemoteService):void{
+				if (txtANOGPS.text==""){
+					txtANOGPS.text=_instanceUtils.FormatDate()+"\nUPS!!!! Algo de errado se passou com o serviço remoto";
+				}
+				else{
+					txtANOGPS.text+="\n"+_instanceUtils.FormatDate()+"\nUPS!!!! Algo de errado se passou com o serviço remoto";
+				}
+				_instancia.ControllerSetServiceOnline(false);
+			}
+			
+			
+			
+			
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	
+	<s:Group width="95%" height="95%" top="5" bottom="5" left="25" right="25">
+		<s:TextArea id="txtANOGPS" top="10" left="10" right="10" bottom="100" 
+					editable="false" verticalScrollPolicy="auto"
+					horizontalScrollPolicy="auto"/>
+		<s:Button id="btnTesteConnect" x="99" y="502" width="219"
+				  click="btnTesteConnect_clickHandler(event)" label="Remote Status"/>
+	</s:Group>
+</s:View>

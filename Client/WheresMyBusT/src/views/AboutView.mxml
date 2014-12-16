@@ -35,7 +35,7 @@
 				
 				tmpstr += "<font color='#000000'size='" + this.fontSize + "'>O código fonte desta aplicação encontra-se disponivel em <a href='https://github.com/l17719/WheresMaBus'><font color='#037ECC' size='" + (this.fontSize + 2) + "'><b>GitHub Page</b></font></a><font color='#000000'size='" + this.fontSize + "'>.</font>";
 				
-				tmpstr += "<br/><font color='#000000'size='" + this.fontSize + "'>Esta é uma versão proof of concept e será constantemente actualizada quando possível, ficamos a aguardar o vosso feedback em <a href='http://tudoemcasa.no-ip.info/WMB/index.html' size='" + (this.fontSize + 2) + "'><b>Developper Page</b></font></a><font color='#000000'size='" + this.fontSize + "'>.</font>";
+				tmpstr += "<br/><font color='#000000'size='" + this.fontSize + "'>Esta é uma versão proof of concept e será constantemente actualizada quando possível, ficamos a aguardar o vosso feedback em <a href='http://tudoemcasa.no-ip.info:8080/WMB/index.html' size='" + (this.fontSize + 2) + "'><b>Developper Page</b></font></a><font color='#000000'size='" + this.fontSize + "'>.</font>";
 				
 				
 				tmpstr += "<font color='#000000'size='" + String(this.fontSize - 4) + "'><br><br>Versão da app: " + this.appVersion + "</font><br>";

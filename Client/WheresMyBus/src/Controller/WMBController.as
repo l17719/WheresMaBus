@@ -1,5 +1,7 @@
 package Controller
 {
+	import Model.DummyModel;
+	import Model.VO.DataResponseVo;
 	import Model.VO.RequestVO;
 	import Model.WMBModel;
 
@@ -11,6 +13,7 @@ package Controller
 		
 		private var _instanciaModel:WMBModel= WMBModel.GetInstance();
 		
+		private var _instanciaDummyModel:DummyModel= DummyModel.GetInstance();
 		
 		//metodo para implementar o modelo singleton
 		public static function GetInstance():WMBController{
@@ -39,6 +42,9 @@ package Controller
 			_instanciaModel.ModelGetMyCoordinates();
 			
 		}
+		
+		
+		
 		
 		public function ControllercheckGPSAvailable():Boolean
 		{
@@ -71,16 +77,48 @@ package Controller
 			return _instanciaModel.ModelGetGpsAvailableActive();
 		}
 		
-		public function ControllerObtemChave():String
-		{
-			// TODO Auto Generated method stub
-			return _instanciaModel.ModelObtemChave();
-		}
+		
 		
 		public function ControllerSetMyCoordinates(tmpdata:RequestVO):void
 		{
 			_instanciaModel.ModelSetMyCoordinates(tmpdata);
 			
 		}
+		
+		public function ControllerGetServiceOnline():Boolean
+		{
+			// TODO Auto Generated method stub
+			return _instanciaModel.GetServiceOnline();
+		}
+		
+		public function ControllerSetServiceOnline(value:Boolean):void
+		{
+			// TODO Auto Generated method stub
+			_instanciaModel.SetServiceOnline(value);
+			
+		}
+		
+		
+		
+		
+		
+		//dumydatainit
+		public function ControllerInitDummy():void{
+			if (_instanciaDummyModel.DummyInitialized){
+				return;
+			}
+			_instanciaDummyModel.GeraDadosDummyBus();
+			_instanciaDummyModel.GeraDadosDummyUser();
+			_instanciaDummyModel.DummyInitialized= true;
+		}
+		
+		public function GetDummyUser(value:Boolean):RequestVO{
+			return _instanciaDummyModel.ObtemLocalizacaoDummyUser(value);
+		}
+		
+		public function GetDummyBus(value:Boolean):DataResponseVo{
+			return _instanciaDummyModel.ObtemLocalizacaoDummyBus(value);
+		}
+		//
 	}
 }

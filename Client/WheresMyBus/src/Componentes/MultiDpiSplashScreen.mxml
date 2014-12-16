@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SplashScreenImage xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					 xmlns:s="library://ns.adobe.com/flex/spark"
+					 >
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:SplashScreenImageSource id="img_480_800" source="@Embed('Assets/SplashImages/Sp480x800.png')"/>
+	<s:SplashScreenImageSource id="img_640_960" source="@Embed('Assets/SplashImages/Sp2x.png')"/>
+	<s:SplashScreenImageSource id="img_720_1280" source="@Embed('Assets/SplashImages/Sp720x1280.png')"/>
+	<s:SplashScreenImageSource id="img_1080_1920" source="@Embed('Assets/SplashImages/Sp1080x1920.png')"/>
+
+	<fx:Script>
+		<![CDATA[
+			
+			
+			override public function getImageClass(aspectRatio:String, dpi:Number, resolution:Number):Class{
+				var x:Number= Capabilities.screenResolutionX;
+				var y:Number= Capabilities.screenResolutionY;
+				
+				// HTC
+				if ((x == 480) && (y == 800)) return img_480_800.source;
+				
+				// iPhone 5
+				if ((x == 640) && (y == 1136)) return img_1080_1920.source;
+				
+				// iPhone 4
+				if ((x == 640) && (y == 960)) return img_640_960.source;
+				
+				// Samsung galaxy s3
+				if ((x == 720) && (y == 1280)) return img_720_1280.source;
+				
+				// Samsung galaxy s4
+				if ((x == 1080) && (y == 1920)) return img_1080_1920.source;
+				
+				// Default
+				return img_1080_1920.source;
+			}
+		]]>
+	</fx:Script>
+</s:SplashScreenImage>

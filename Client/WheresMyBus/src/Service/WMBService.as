@@ -3,6 +3,8 @@ package Service
 	import Eventos.EventoLocalizacao;
 	import Eventos.EventoRemoteService;
 	
+	import Model.VO.CoordinatesVo;
+	import Model.VO.DataResponseVo;
 	import Model.VO.RequestVO;
 	
 	import flash.display.Sprite;
@@ -10,6 +12,7 @@ package Service
 	import flash.events.StatusEvent;
 	import flash.sensors.Geolocation;
 	
+	import mx.collections.ArrayCollection;
 	import mx.rpc.AsyncToken;
 	import mx.rpc.Responder;
 	import mx.rpc.events.FaultEvent;
@@ -43,18 +46,47 @@ package Service
 		public function ServicesendCoordinates(value:RequestVO):void
 		{
 			_tmpHttpService= new HTTPService();
-			_tmpHttpService.url="http://localhost:61765/api/Bus/GetBus/";
-			_tmpHttpService.method="POST";
-			var tmpToken:AsyncToken= _tmpHttpService.send(value);
+			_tmpHttpService.url= "http://localhost:61765/api/bdata/GetBus/value";
+			_tmpHttpService.method= "POST";
+			_tmpHttpService.requestTimeout=120;
+			_tmpHttpService.headers={Accept:"application/json"}
+			_tmpHttpService.contentType="application/json";
+			_tmpHttpService.resultFormat="text";
+			var tmpToken:AsyncToken= _tmpHttpService.send(JSON.stringify(value));
 			tmpToken.addResponder(new Responder(onSendCoordinatesOk,onServiceFault));
 			
 		}
 		
 		private function onSendCoordinatesOk(e:ResultEvent):void
 		{
-			// TODO Auto Generated method stub
+			var resultData:Object= JSON.parse(String(e.result));
 			
+			var tmpResultado:DataResponseVo= new DataResponseVo();
+			tmpResultado.ResponseMessage= resultData.ResponseMessage;
+			tmpResultado.TimeAvg= Number(resultData.TimeAvg);
+			if (tmpResultado.ResponseMessage!="NobusFound"){
+				var tmpArray:Array= resultData.ListaPontos;
+				var tmpDataPonto:ArrayCollection= new ArrayCollection();
+				var i:int=0;
+				var x:int=tmpArray.length;
+				while(i<x){
+					
+					var tmpPontoVo:CoordinatesVo= new CoordinatesVo();
+					tmpPontoVo.ID= tmpArray[i].ID;
+					tmpPontoVo.LatPos= Number(tmpArray[i].LatPos);
+					tmpPontoVo.LongPos= Number(tmpArray[i].LongPos);
+					tmpPontoVo.NomeParagem= tmpArray[i].NomeParagem;
+					tmpDataPonto.addItem(tmpPontoVo);
+					tmpPontoVo= null;
+					i++;
+				}
+				tmpResultado.ListaPontos= tmpDataPonto;
+			}
 			
+			else{
+				
+			}
+			dispatchEvent(new EventoRemoteService(EventoRemoteService.ServiceOk,tmpResultado));
 			
 		}
 		
@@ -68,6 +100,7 @@ package Service
 			_tmpHttpService= new HTTPService();
 			_tmpHttpService.url="http://localhost:61765/api/echo"; //to check
 			_tmpHttpService.method="GET";
+			_tmpHttpService.requestTimeout=120;
 			_tmpHttpService.resultFormat="text";
 			var tmpToken:AsyncToken= _tmpHttpService.send();
 			tmpToken.addResponder(new Responder(onServiceOnline,onServiceFault));
@@ -83,6 +116,8 @@ package Service
 		
 		public function ServiceGetMyCoordinates():void
 		{
+			tmpgeo= new Geolocation();
+			
 			// TODO Auto Generated method stub
 			if (Geolocation.isSupported){
 				tmpgeo.addEventListener(StatusEvent.STATUS,handleerrorGPS,false,0,true);
@@ -92,6 +127,8 @@ package Service
 					//tmpgeo.setRequestedUpdateInterval(10);
 					
 				}*/
+				
+				
 			}
 		}
 		
@@ -114,7 +151,8 @@ package Service
 			tmpgeo.removeEventListener(StatusEvent.STATUS,handleerrorGPS);
 			tmpgeo.removeEventListener(GeolocationEvent.UPDATE,handleerrorGPS);
 			tmpgeo=null;
-			this.dispatchEvent(new EventoLocalizacao(EventoLocalizacao.NOK,null));
+			var tmpStr:String= event.code+ " " + event.type;
+			this.dispatchEvent(new EventoLocalizacao(EventoLocalizacao.NOK,tmpStr));
 			
 		}		
 		

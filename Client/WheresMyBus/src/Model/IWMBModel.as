@@ -11,7 +11,8 @@ package Model
 		function ModelCheckOnlineService():void;
 		function ModelSetGpsAvailableActive(value:Boolean):void;
 		function ModelGetGpsAvailableActive():Boolean;
-		function ModelObtemChave():String;
+		function SetServiceOnline(value:Boolean):void;
+		function GetServiceOnline():Boolean;
 		function ModelSetMyCoordinates(value:RequestVO):void;
 	}
 }
