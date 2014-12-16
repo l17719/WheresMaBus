@@ -76,6 +76,6 @@
 	<s:ViewNavigator label="About" width="100%" height="100%" firstView="views.AboutView" id="vAbout"/>
 	<s:ViewNavigator label="Bus" width="100%" height="100%" firstView="views.BusView" id="vBus"/>
 	
-	<s:ViewNavigator label="Dummy" width="100%" height="100%" firstView="views.DummyView" id="vDummy"/>
+	<!--<s:ViewNavigator label="Dummy" width="100%" height="100%" firstView="views.DummyView" id="vDummy"/>-->
 	
 </s:TabbedViewNavigatorApplication>

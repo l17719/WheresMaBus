@@ -2,6 +2,7 @@
 <s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" 
 		xmlns:tilemap="com.mapquest.tilemap.*"
+		xmlns:comp="Componentes.*"
 		title="Mapa"
 		creationComplete="Mapa_contentCreationCompleteHandler(event)"
 		destructionPolicy="auto"
@@ -12,6 +13,12 @@
 		<s:State name="GPSNOK"/>
 		<s:State name="NOCAP"/>
 	</s:states>
+	
+	<fx:Declarations>
+		
+		<comp:AlertDialog id="Dialogo"/>
+		
+	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
 			import Controller.WMBController;
@@ -32,6 +39,7 @@
 			import com.mapquest.tilemap.ShapeCollection;
 			import com.mapquest.tilemap.controls.inputdevice.MouseWheelZoomControl;
 			import com.mapquest.tilemap.controls.shadymeadow.SMLargeZoomControl;
+			import com.mapquest.tilemap.pois.MapIcon;
 			import com.mapquest.tilemap.pois.Poi;
 			
 			import mx.events.FlexEvent;
@@ -52,7 +60,17 @@
 			private var tmpCoordinates:CoordinatesVo;
 			
 			
-			//private var alOK:AlertOk;
+			
+			[Embed(source="Assets/AppIcons/MapIcons/Human.png")]
+			private var IconHuman:Class;
+			
+			private var IconMaps:MapIcon;
+			
+			[Embed(source="Assets/AppIcons/MapIcons/Iconbus.png")]
+			private var BusIcon:Class;
+			
+			
+			private var _instanceUtils:Utilities= Utilities.GetInstance();
 			
 			private var _instanciaService:WMBService= WMBService.GetInstance();
 			
@@ -83,15 +101,19 @@
 			{
 				
 				
-				
 				if (!instancia.ControllerGetGpsAvailableActive()){
 					currentState="GPSNOK";
-					txtANOGPS.text=_instanciaUtils.FormatDate()+"\nOcorreu um erro ao obter sua localização \n por favor active o sensor GPS no seu terminal\n e reinicie a aplicação";
+					txtANOGPS.text=_instanceUtils.FormatDate()+"\nOcorreu um erro ao obter sua localização \n por favor active o sensor GPS no seu terminal\n e reinicie a aplicação";
 					return;
 				}
-				currentState="NOCAP";
+				/* if (instancia.ControllerGetGpsAvailableActive()==false){
+				currentState="GPSNOK";
+				txtANOGPS.text="Ocorreu um erro ao obter sua localização \n por favor active o sensor GPS no seu terminal\n e reinicie a aplicação";
+				return;
+				} 
+				currentState="NOCAP";*/
 				
-					
+				
 				
 			}
 			
@@ -158,20 +180,31 @@
 				//
 			}
 			
-			protected function onFault(event:EventoLocalizacao):void
+			/*protected function onFault(event:EventoLocalizacao):void
 			{
-				/* _instanciaService.removeEventListener(EventoLocalizacao.NOK,onFault);
-				_instanciaService.removeEventListener(EventoLocalizacao.Ok,onFault);
-				// TODO Auto-generated method stub
-				instancia.ControllerSetGpsAvailableActive(false);
-				alOK= new AlertOk;
-				alOK.message= "Nao foi possivel obter a sua localizacao, volte a tentar mais tarde!";
-				alOK.width = stage.width - 40;
-				alOK.x = FlexGlobals.topLevelApplication.width/2 - alOK.width/2;
-				alOK.y = (stage.height  - alOK.height) / 2;
-				alOK.setStyle("skinClass", SkinAlerta);
-				alOK.open(this, true); */
+			_instanciaService.removeEventListener(EventoLocalizacao.NOK,onFault);
+			_instanciaService.removeEventListener(EventoLocalizacao.Ok,onFault);
+			// TODO Auto-generated method stub
+			instancia.ControllerSetGpsAvailableActive(false);
+			alOK= new AlertOk;
+			alOK.message= "Nao foi possivel obter a sua localizacao, volte a tentar mais tarde!";
+			alOK.width = stage.width - 40;
+			alOK.x = FlexGlobals.topLevelApplication.width/2 - alOK.width/2;
+			alOK.y = (stage.height  - alOK.height) / 2;
+			alOK.setStyle("skinClass", SkinAlerta);
+			alOK.open(this, true); 
+			if (currentState==""){
+			
 			}
+			else{
+			if (taNoMap.text==""){
+			taNoMap.text=_instanceUtils.FormatDate()+ "\nEu estou aqui: latitude: "+tmpDataLocation.latitude+"\n longitude: "+ tmpDataLocation.longitude;
+			}
+			else{
+			taNoMap.text+="\n"+_instanceUtils.FormatDate()+"\nEu estou aqui: latitude: "+tmpDataLocation.latitude+"\n longitude: "+ tmpDataLocation.longitude;
+			}
+			}
+			}*/
 			
 			protected function btnGetCoordinates_clickHandler(event:MouseEvent):void
 			{
@@ -183,12 +216,30 @@
 					instancia.ControllerGetMyCoordinates();
 					
 				}
+				else{
+					tmpDataLocation= instancia.GetDummyUser(false);
+					SetDummyInfoUser();
+				}
 			}
 			
 			protected function onGetDataFault(e:EventoLocalizacao):void
 			{
 				_instanciaService.removeEventListener(EventoLocalizacao.NOK,onGetDataFault);
 				_instanciaService.removeEventListener(EventoLocalizacao.Ok,onGetDataFault);
+				
+				if (currentState=="GPSOK"){
+					Dialogo.alertTitle="Erro";
+					Dialogo.alertMsg="Erro ao obter coordenadas GPS,\nverifique o se está activo!";
+					Dialogo.open(this);
+				}
+				else{
+					if (taNoMap.text==""){
+						taNoMap.text=_instanceUtils.FormatDate()+ "\nNão foi possivel obter a sua localização GPS,\n verifique que o GPS está activo";
+					}
+					else{
+						taNoMap.text+=_instanceUtils.FormatDate()+ "\nNão foi possivel obter a sua localização GPS,\n verifique que o GPS está activo";
+					}
+				}
 				
 			}
 			
@@ -201,7 +252,7 @@
 				/* _instanciaService.addEventListener(EventoRemoteService.ServiceOk,onRemoteGetDataOK,false,0,true);
 				_instanciaService.addEventListener(EventoRemoteService.ServiceNOK,onRemoteFault,false,0,true);
 				instancia.ControllersendCoordinates(tmpDataLocation);
-				 */
+				*/
 				instancia.ControllerSetMyCoordinates(tmpDataLocation);
 				
 				
@@ -224,9 +275,9 @@
 					
 				}
 				else{
-					
+					SetTAValues();
 				}
-						
+				
 			}
 			
 			
@@ -248,7 +299,19 @@
 			{
 				_instanciaService.removeEventListener(EventoRemoteService.ServiceNOK,onRemoteFault);
 				_instanciaService.removeEventListener(EventoRemoteService.ServiceOk,onRemoteFault);
-				
+				if (currentState=="GPSOK"){
+					Dialogo.alertTitle="Erro";
+					Dialogo.alertMsg="Erro ao obter dados do autocarro,\nvolte a tentar";
+					Dialogo.open(this);
+				}
+				else{
+					if (taNoMap.text==""){
+						taNoMap.text=_instanceUtils.FormatDate()+ "\nNão foi possivel obter a localização do autocarro,\n volte a tentar mais tarde";
+					}
+					else{
+						taNoMap.text+=_instanceUtils.FormatDate()+ "\nNão foi possivel obter a localização do autocarro,\n volte a tentar mais tarde";
+					}
+				}
 			}
 			
 			protected function onRemoteGetDataOK(e:EventoRemoteService):void
@@ -266,12 +329,13 @@
 				//
 				if (currentState=="NOCAP"){
 					tmpCoordinates= tmpServiceData.ListaPontos.getItemAt(0) as CoordinatesVo;
-					if (taNoMap.text==""){
-						taNoMap.text="O Autocarro encontra-se nas coordenadas seguintes: \n latitude: "+tmpCoordinates.LatPos+"\n longitude: "+ tmpCoordinates.LongPos+"\n na paragem:\n" + tmpCoordinates.NomeParagem;
+					/* if (taNoMap.text==""){
+					taNoMap.text="O Autocarro encontra-se nas coordenadas seguintes: \n latitude: "+tmpCoordinates.LatPos+"\n longitude: "+ tmpCoordinates.LongPos+"\n na paragem:\n" + tmpCoordinates.NomeParagem;
 					}
 					else{
-						taNoMap.text+="\n"+taNoMap.text+"\n"+"O Autocarro encontra-se nas coordenadas seguintes: \n latitude: "+tmpCoordinates.LatPos+"\n longitude: "+ tmpCoordinates.LongPos+"\n na paragem:\n" + tmpCoordinates.NomeParagem;
-					}
+					taNoMap.text+="\n"+taNoMap.text+"\n"+"O Autocarro encontra-se nas coordenadas seguintes: \n latitude: "+tmpCoordinates.LatPos+"\n longitude: "+ tmpCoordinates.LongPos+"\n na paragem:\n" + tmpCoordinates.NomeParagem;
+					} */
+					SetTAValues();
 				}
 				else{
 					/* CleanBusPOIS();
@@ -289,30 +353,30 @@
 				/* var tmpDataPontoBus:CoordinatesVo= tmpServiceData.ListaPontos.getItemAt(0) as CoordinatesVo;
 				
 				if (currentState=="NOCAP"){
-					
-					
-					 var tmpDataPonto:CoordinatesVo= tmpServiceData.ListaPontos.getItemAt(0);
-					
-					 taNoMap.text="O Autocarro encontra-se nas coordenadas seguintes: \n latitude: "+tmpDataPonto.LatPos+"\n longitude: "+ tmpDataPonto.LongPos+"\n na paragem:\n" + tmpDataPonto.NomeParagem; 
+				
+				
+				var tmpDataPonto:CoordinatesVo= tmpServiceData.ListaPontos.getItemAt(0);
+				
+				taNoMap.text="O Autocarro encontra-se nas coordenadas seguintes: \n latitude: "+tmpDataPonto.LatPos+"\n longitude: "+ tmpDataPonto.LongPos+"\n na paragem:\n" + tmpDataPonto.NomeParagem; 
 				}
 				else if (currentState=="GPSOK"){
-					
-					if (WMBMapa==null){
-						WMBMapa.addControl(new SMLargeZoomControl());
-						WMBMapa.addControl(new MouseWheelZoomControl());
-					}
-					
-					
-					
-					
-					
-					BusPOI= new Poi(new LatLng(tmpDataPontoBus.LatPos,tmpDataPontoBus.LongPos));
-					
-					BusPOI.rolloverAndInfoTitleText="Autocarro";
-					
-					var tmpStr:String= "Autocarro aqui: latitude: "+tmpDataPontoBus.LatPos+"\n longitude: "+ tmpDataPontoBus.LongPos+ "\n na paragem: \n"+ tmpDataPontoBus.NomeParagem;
-					BusPOI.infoContent= tmpStr;
-					WMBMapa.addShape(BusPOI);
+				
+				if (WMBMapa==null){
+				WMBMapa.addControl(new SMLargeZoomControl());
+				WMBMapa.addControl(new MouseWheelZoomControl());
+				}
+				
+				
+				
+				
+				
+				BusPOI= new Poi(new LatLng(tmpDataPontoBus.LatPos,tmpDataPontoBus.LongPos));
+				
+				BusPOI.rolloverAndInfoTitleText="Autocarro";
+				
+				var tmpStr:String= "Autocarro aqui: latitude: "+tmpDataPontoBus.LatPos+"\n longitude: "+ tmpDataPontoBus.LongPos+ "\n na paragem: \n"+ tmpDataPontoBus.NomeParagem;
+				BusPOI.infoContent= tmpStr;
+				WMBMapa.addShape(BusPOI);
 				} */
 				
 			}
@@ -321,38 +385,38 @@
 			
 			
 			
-			/* protected function btnDummyBus_clickHandler(event:MouseEvent):void
+			protected function btnDummyBus_clickHandler(event:MouseEvent):void
 			{
-				if (currentState!="GPSOK"){
-					currentState="GPSOK";
+				/* if (currentState!="GPSOK"){
+				currentState="GPSOK";
 				}
 				instancia.ControllerInitDummy();
 				
 				if(UserPOI!=null){
-					WMBMapa.removeShape(WMBMapa.getShapeByKey(UserPOI.key));
-					UserPOI=null;
-					WMBMapa.removeShape(WMBMapa.getShapeByKey(BusPOI.key));
-					BusPOI=null;
-					
+				WMBMapa.removeShape(WMBMapa.getShapeByKey(UserPOI.key));
+				UserPOI=null;
+				WMBMapa.removeShape(WMBMapa.getShapeByKey(BusPOI.key));
+				BusPOI=null;
+				
 				}
-				var tmpUser:RequestVO= instancia.GetDummyUser(true);
+				var tmpUser:RequestVO= instancia.GetDummyUser();
 				trace("User lat: "+tmpUser.latitude+"\nlong: "+ tmpUser.longitude);
 				
-				var tmpBus:DataResponseVo= instancia.GetDummyBus(true);
+				var tmpBus:DataResponseVo= instancia.GetDummyBus();
 				var tmpBusCoord:CoordinatesVo= tmpBus.ListaPontos.getItemAt(0) as CoordinatesVo;
 				trace("bus lat: "+tmpBusCoord.LatPos+"\nlong: "+ tmpBusCoord.LongPos);
 				
 				if (tmpZoomControl==null){
-					//instancia controlos mapa
-					tmpZoomControl= new SMLargeZoomControl();
-					tmpZoomControl.name="TZoom";
-					tmpMouseWheelCtrl= new MouseWheelZoomControl();
-					tmpMouseWheelCtrl.name="TMouse";
-					//
-					// adiciona os controlos ao mapa
-					WMBMapa.addControl(tmpZoomControl);
-					WMBMapa.addControl(tmpMouseWheelCtrl);
-					//
+				//instancia controlos mapa
+				tmpZoomControl= new SMLargeZoomControl();
+				tmpZoomControl.name="TZoom";
+				tmpMouseWheelCtrl= new MouseWheelZoomControl();
+				tmpMouseWheelCtrl.name="TMouse";
+				//
+				// adiciona os controlos ao mapa
+				WMBMapa.addControl(tmpZoomControl);
+				WMBMapa.addControl(tmpMouseWheelCtrl);
+				//
 				}
 				
 				
@@ -378,7 +442,7 @@
 				
 				var tmpStrB:String= "Autocarro aqui: latitude: "+tmpBusCoord.LatPos+"\n longitude: "+ tmpBusCoord.LongPos+ "\n na paragem: \n"+ tmpBusCoord.NomeParagem;
 				BusPOI.infoContent= tmpStrB;
-				WMBMapa.addShape(BusPOI);
+				WMBMapa.addShape(BusPOI); */
 				
 				
 			}
@@ -386,15 +450,15 @@
 			protected function btnDummyBusTextMode_clickHandler(event:MouseEvent):void
 			{
 				
-				if (taNoMap!=null){
-					taNoMap.text="";
-					tmpUser=null;
-					tmpBus=null;
-					tmpDataPonto=null;
+				/* if (taNoMap!=null){
+				taNoMap.text="";
+				tmpUser=null;
+				tmpBus=null;
+				tmpDataPonto=null;
 				}
 				
 				if (currentState!="NOCAP"){
-					currentState="NOCAP";
+				currentState="NOCAP";
 				}
 				instancia.ControllerInitDummy();
 				
@@ -403,21 +467,62 @@
 				var tmpDataPonto:CoordinatesVo= tmpBus.ListaPontos.getItemAt(0) as CoordinatesVo;
 				taNoMap.text="Eu encontro me em latitude: " + tmpUser.latitude+ " e longitude: " + tmpUser.longitude+"\n";
 				
-				taNoMap.text+=" O Autocarro encontra-se nas coordenadas seguintes: \n latitude: "+tmpDataPonto.LatPos+"\n longitude: "+ tmpDataPonto.LongPos+"\n na paragem:\n" + tmpDataPonto.NomeParagem; 
+				taNoMap.text+=" O Autocarro encontra-se nas coordenadas seguintes: \n latitude: "+tmpDataPonto.LatPos+"\n longitude: "+ tmpDataPonto.LongPos+"\n na paragem:\n" + tmpDataPonto.NomeParagem; */ 
 				
 				
+			}
+			
+			/* protected function Mapa_initializeHandler(event:FlexEvent):void
+			{
+			
+			if (!instancia.ControllerGetGpsAvailableActive()){
+			currentState="GPSNOK";
+			txtANOGPS.text=_instanceUtils.FormatDate()+"\nOcorreu um erro ao obter sua localização \n por favor active o sensor GPS no seu terminal\n e reinicie a aplicação";
+			return;
+			}
+			// TODO Auto-generated method stub
+			var checkGps:Boolean= instancia.ControllercheckGPSAvailable();
+			instancia.ControllerSetGpsAvailableActive(checkGps);
+			
+			instancia.ControllerInitDummy();
+			
+			
 			} */
-			
-			
 			
 			protected function btnGetBusCoordinates_clickHandler(event:MouseEvent):void
 			{
-				if (instancia.ControllerGetGpsAvailableActive()){
-					_instanciaService.addEventListener(EventoRemoteService.ServiceOk,onRemoteGetDataOK,false,0,true);
-					_instanciaService.addEventListener(EventoRemoteService.ServiceNOK,onRemoteFault,false,0,true);
+				/* if (instancia.ControllerGetGpsAvailableActive()){
+				_instanciaService.addEventListener(EventoRemoteService.ServiceOk,onRemoteGetDataOK,false,0,true);
+				_instanciaService.addEventListener(EventoRemoteService.ServiceNOK,onRemoteFault,false,0,true);
+				
+				instancia.ControllersendCoordinates(tmpDataLocation);
+				
+				} */
+				
+				if (!instancia.ControllerGetServiceOnline()){
+					Dialogo.alertTitle="Erro";
+					Dialogo.alertMsg="Nao foi possivel verificar disponibilidade serviço,\n volte ao ecrã Conectividade e verifique a disponibilidade!";
+					Dialogo.open(this);
+				}
+				if (tmpDataLocation!=null){
+					if (instancia.ControllerGetGpsAvailableActive()){
+						_instanciaService.addEventListener(EventoRemoteService.ServiceOk,onRemoteGetDataOK,false,0,true);
+						_instanciaService.addEventListener(EventoRemoteService.ServiceNOK,onRemoteFault,false,0,true);
+						instancia.ControllersendCoordinates(tmpDataLocation);
+					}
 					
-					instancia.ControllersendCoordinates(tmpDataLocation);
-					
+				}
+				else{
+					//mostra Alerta
+					if (currentState=="GPSOK"){
+						Dialogo.alertTitle="Erro";
+						Dialogo.alertMsg="Obtenha primeiro a sua localização!";
+						Dialogo.open(this);
+					}
+					else if (currentState=="NOCAP"){
+						taNoMap.text+="\n"+_instanceUtils.FormatDate()+"\nObtenha primeiro os dados da sua localização antes de obter \n a localizacao do autocarro!";
+					}
+					//
 				}
 				
 			}
@@ -443,16 +548,28 @@
 			{
 				if (currentState=="GPSOK"){
 					currentState="NOCAP";
-					if (taNoMap.text==""){
-						taNoMap.text="O Autocarro encontra-se nas coordenadas seguintes: \n latitude: "+tmpCoordinates.LatPos+"\n longitude: "+ tmpCoordinates.LongPos+"\n na paragem:\n" + tmpCoordinates.NomeParagem;
+					/* if (taNoMap.text==""){
+					//taNoMap.text= "Eu estou aqui: latitude: "+tmpDataLocation.latitude+"\n longitude: "+ tmpDataLocation.longitude;
+					taNoMap.text="Eu estou aqui: latitude: "+tmpDataLocation.latitude+"\n longitude: "+ tmpDataLocation.longitude+"\nO Autocarro encontra-se nas coordenadas seguintes: \n latitude: "+tmpCoordinates.LatPos+"\n longitude: "+ tmpCoordinates.LongPos+"\n na paragem:\n" + tmpCoordinates.NomeParagem;
 					}
 					else{
-						taNoMap.text+="\n"+taNoMap.text+"\n"+"O Autocarro encontra-se nas coordenadas seguintes: \n latitude: "+tmpCoordinates.LatPos+"\n longitude: "+ tmpCoordinates.LongPos+"\n na paragem:\n" + tmpCoordinates.NomeParagem;
-					}
+					//taNoMap.text+="\n"+taNoMap.text+"\n"+"O Autocarro encontra-se nas coordenadas seguintes: \n latitude: "+tmpCoordinates.LatPos+"\n longitude: "+ tmpCoordinates.LongPos+"\n na paragem:\n" + tmpCoordinates.NomeParagem;
+					taNoMap.text+="\n"+taNoMap.text;
+					
+					} */
+					SetTAValues();
 				}
 				else{
-					SetUserInfoMap();
-					SetBusInfoMap();
+					currentState="GPSOK";
+					if (tmpCoordinates!=null){
+						SetBusInfoMap();
+					}
+					
+					if (tmpDataLocation!=null){
+						SetUserInfoMap();
+					}
+					
+					
 					//
 				}
 				
@@ -472,61 +589,248 @@
 				UserPOI.rolloverAndInfoTitleText="ME!!!";
 				var tmpStr:String= "Eu estou aqui: latitude: "+tmpDataLocation.latitude+"\n longitude: "+ tmpDataLocation.longitude;
 				UserPOI.infoContent= tmpStr;
+				
+				IconMaps= new MapIcon();
+				IconMaps.setImage(new IconHuman(),22,22);
+				UserPOI.icon= IconMaps;
 				WMBMapa.addShape(UserPOI);
 				//
+				if (tmpCoordinates!=null){
+					SetBusInfoMap();
+				}
+				
+				if (tmpZoomControl==null){
+					WMBMapa.addControl(new SMLargeZoomControl());
+					WMBMapa.addControl(new MouseWheelZoomControl());
+				}
 			}
 			private function SetBusInfoMap():void{
 				CleanBusPOIS();
+				
+				if (tmpDataLocation==null){
+					// set center map location and zoom
+					WMBMapa.setCenter(new LatLng(tmpCoordinates.LatPos,tmpCoordinates.LongPos),15);
+					//
+				}
+				else{
+					// set center map location and zoom
+					WMBMapa.setCenter(new LatLng(tmpDataLocation.latitude,tmpDataLocation.longitude),15);
+					//
+				}
+				
+				
+				if (tmpZoomControl==null){
+					WMBMapa.addControl(new SMLargeZoomControl());
+					WMBMapa.addControl(new MouseWheelZoomControl());
+				}
 				BusPOI= new Poi(new LatLng(tmpCoordinates.LatPos,tmpCoordinates.LongPos));
 				BusPOI.key="pontoBus";
 				BusPOI.rolloverAndInfoTitleText="Autocarro";
 				
 				var tmpStr:String= "Autocarro aqui: latitude: "+tmpCoordinates.LatPos+"\n longitude: "+ tmpCoordinates.LongPos+ "\n na paragem: \n"+ tmpCoordinates.NomeParagem;
 				BusPOI.infoContent= tmpStr;
+				
+				IconMaps= new MapIcon();
+				IconMaps.setImage(new BusIcon(),22,22);
+				BusPOI.icon= IconMaps;
 				WMBMapa.addShape(BusPOI);
 			}
+			
+			protected function btnGetBusNoService_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				tmpServiceData= instancia.GetDummyBus(true);
+				tmpCoordinates= tmpServiceData.ListaPontos.getItemAt(0) as CoordinatesVo;
+				SetDummyInfoBus();
+				
+			}
+			
+			protected function btnGetCoordinatesNoService_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				tmpDataLocation= instancia.GetDummyUser(false);
+				SetDummyInfoUser();
+			}
+			
+			
+			private function SetDummyInfoBus():void{
+				if (currentState=="GPSOK"){
+					SetBusInfoMap();	
+				}
+				else{
+					/* if (taNoMap.text==""){
+					taNoMap.text="O Autocarro encontra-se nas coordenadas seguintes: \n latitude: "+tmpCoordinates.LatPos+"\n longitude: "+ tmpCoordinates.LongPos+"\n na paragem:\n" + tmpCoordinates.NomeParagem;
+					}
+					else{
+					taNoMap.text+="\n"+taNoMap.text+"\n"+"O Autocarro encontra-se nas coordenadas seguintes: \n latitude: "+tmpCoordinates.LatPos+"\n longitude: "+ tmpCoordinates.LongPos+"\n na paragem:\n" + tmpCoordinates.NomeParagem;
+					} */
+					SetTAValues();
+				}
+			}
+			private function SetDummyInfoUser():void{
+				if (currentState=="GPSOK"){
+					SetUserInfoMap();
+				}
+				else{
+					if (taNoMap.text==""){
+						taNoMap.text=_instanceUtils.FormatDate()+ "\nEu estou aqui: latitude: "+tmpDataLocation.latitude+"\n longitude: "+ tmpDataLocation.longitude;
+					}
+					else{
+						taNoMap.text+="\n"+_instanceUtils.FormatDate()+"\nEu estou aqui: latitude: "+tmpDataLocation.latitude+"\n longitude: "+ tmpDataLocation.longitude;
+					}
+				}
+			}
+			
+			
+			private function SetTAValues():void{
+				if (taNoMap.text==""){
+					
+					if (tmpDataLocation!=null){
+						taNoMap.text= _instanceUtils.FormatDate()+"\nEu estou aqui: latitude: "+tmpDataLocation.latitude+"\n longitude: "+ tmpDataLocation.longitude;
+					}
+					if (tmpCoordinates!=null){
+						taNoMap.text+="\n"+_instanceUtils.FormatDate()+"\nO Autocarro encontra-se nas coordenadas seguintes: \n latitude: "+tmpCoordinates.LatPos+"\n longitude: "+ tmpCoordinates.LongPos+"\n na paragem:\n" + tmpCoordinates.NomeParagem;
+					}
+					
+				}
+				else{
+					if (tmpDataLocation!=null){
+						taNoMap.text=_instanceUtils.FormatDate()+"\nEu estou aqui: latitude: "+tmpDataLocation.latitude+"\n longitude: "+ tmpDataLocation.longitude;
+					}
+					if (tmpCoordinates!=null){
+						taNoMap.text+="\n"+_instanceUtils.FormatDate()+"\nO Autocarro encontra-se nas coordenadas seguintes: \n latitude: "+tmpCoordinates.LatPos+"\n longitude: "+ tmpCoordinates.LongPos+"\n na paragem:\n" + tmpCoordinates.NomeParagem;
+					}
+				}
+			}
+			
+			protected function tgsStates_changeHandler(event:Event):void
+			{
+				// TODO Auto-generated method stub
+				/* if (currentState=="GPSOK"){
+				currentState="NOCAP";
+				}
+				else{
+				currentState="GPSOK";
+				} */
+				if (currentState=="GPSOK"){
+					currentState="NOCAP";
+					/* if (taNoMap.text==""){
+					//taNoMap.text= "Eu estou aqui: latitude: "+tmpDataLocation.latitude+"\n longitude: "+ tmpDataLocation.longitude;
+					taNoMap.text="Eu estou aqui: latitude: "+tmpDataLocation.latitude+"\n longitude: "+ tmpDataLocation.longitude+"\nO Autocarro encontra-se nas coordenadas seguintes: \n latitude: "+tmpCoordinates.LatPos+"\n longitude: "+ tmpCoordinates.LongPos+"\n na paragem:\n" + tmpCoordinates.NomeParagem;
+					}
+					else{
+					//taNoMap.text+="\n"+taNoMap.text+"\n"+"O Autocarro encontra-se nas coordenadas seguintes: \n latitude: "+tmpCoordinates.LatPos+"\n longitude: "+ tmpCoordinates.LongPos+"\n na paragem:\n" + tmpCoordinates.NomeParagem;
+					taNoMap.text+="\n"+taNoMap.text;
+					
+					} */
+					SetTAValues();
+				}
+				else{
+					currentState="GPSOK";
+					if (tmpCoordinates!=null){
+						SetBusInfoMap();
+					}
+					
+					if (tmpDataLocation!=null){
+						SetUserInfoMap();
+					}
+					
+					
+					//
+				}
+			}
+			
 		]]>
 	</fx:Script>
 	
-	
-	<s:Group id="GroupMapa" includeIn="GPSNOK" x="10" y="10" width="95%" height="95%"
-			 name="grpContainer" >
-		<s:TextArea id="txtANOGPS" top="10" bottom="10" left="10" right="10" includeIn="GPSNOK" editable="false"
-					verticalScrollPolicy="auto"
-					horizontalScrollPolicy="auto"/>
-		<!--<s:Label includeIn="GPSNOK" x="34" y="227" fontSize="32" name="TextoNOK"
-				 text="O Gps do terminal não se encontra activo ou ocorreu um erro ao "/>-->
+	<s:Group id="grpPai" width="100%" height="100%" top="10" bottom="10" left="10" right="10">
 		
+		<s:layout>
+			<s:VerticalLayout paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10"/>
+		</s:layout>
+		<s:Group id="GroupMapa" includeIn="GPSNOK"
+				 name="grpContainer" width="95%" height="90%" >
+			<s:TextArea id="txtANOGPS" left="20" right="20" top="10" bottom="10" includeIn="GPSNOK" editable="false"
+						verticalScrollPolicy="auto"
+						horizontalScrollPolicy="auto"/>
+		</s:Group>
+		<s:Group id="grpNocap" includeIn="NOCAP" width="95%" height="90%">
+			<s:TextArea includeIn="NOCAP"  name="taNOMap"
+						id="taNoMap"
+						editable="false"
+						horizontalScrollPolicy="auto" verticalScrollPolicy="auto"
+						left="20" right="20" top="10" bottom="10"/><!--text="Lore IPSUM"-->
+		</s:Group>
+		
+		<s:Group id="grpMap" includeIn="GPSOK" width="95%" height="80%" name="grpMapa"
+				 left="10" right="10" top="10">
+			<tilemap:TilemapComponent name="Mapa" id="WMBMapa" width="100%" height="100%" includeIn="GPSOK"
+									  key="Fmjtd%7Cluurnuubng%2C8w%3Do5-9wrxga"
+									  top="5" bottom="5" left="5" right="5"/>
+		</s:Group>
+		<s:Group width="95%" excludeFrom="GPSNOK">
+			<s:layout>
+				<s:TileLayout horizontalGap="5" verticalGap="5" paddingTop="10" paddingLeft="100" paddingRight="35" paddingBottom="35"/>
+			</s:layout>
+			<s:Button id="btnGetCoordinates" excludeFrom="GPSNOK" width="120" height="40" label="Eu?"
+					  click="btnGetCoordinates_clickHandler(event)"
+					  />
+			<!--<s:Button id="btnGetCoordinatesNoService" excludeFrom="GPSNOK"  width="120"
+			height="40" label="MENS" click="btnGetCoordinatesNoService_clickHandler(event)"
+			/>-->
+			<s:Button id="btnGetBusCoordinates" excludeFrom="GPSNOK"  width="120" 
+					  label="Bus?" click="btnGetBusCoordinates_clickHandler(event)"
+					  height="40" />
+			<!--<s:Button id="btnGetBusNoService" excludeFrom="GPSNOK"  width="120" height="40"
+			label="BusNS" click="btnGetBusNoService_clickHandler(event)"/>-->
+			<!--<s:Button id="btnSwitchState" excludeFrom="GPSNOK"  width="120" height="40"
+			label="Switch" click="btnSwitchState_clickHandler(event)"
+			/>-->
+			<s:ToggleSwitch id="tgsStates" slideDuration="1000"
+							change="tgsStates_changeHandler(event)"
+							excludeFrom="GPSNOK" height="50" width="250"
+							skinClass="Assets.Skins.WMBToggleSwitchSkin"/>
+		</s:Group>
+	</s:Group>
+	
+	<!-- uncomment after tests-->
+	<!--<s:Group id="GroupMapa" includeIn="GPSNOK" x="10" y="10" width="95%" height="95%"
+	name="grpContainer" >
+	<s:TextArea id="txtANOGPS" top="10" bottom="10" left="10" right="10" includeIn="GPSNOK" editable="false"
+	verticalScrollPolicy="auto"
+	horizontalScrollPolicy="auto"/>
 	</s:Group>
 	<s:TextArea includeIn="NOCAP" x="48" y="49" name="taNOMap"
-				text="Lore IPSUM" id="taNoMap"
-				width.NOCAP="80%" height.NOCAP="75%" editable="false"
-				horizontalScrollPolicy="auto" verticalScrollPolicy="auto"/>
+	text="Lore IPSUM" id="taNoMap"
+	width.NOCAP="80%" height.NOCAP="75%" editable="false"
+	horizontalScrollPolicy="auto" verticalScrollPolicy="auto"/>
 	
-	<s:Group id="grpMap" includeIn="GPSOK" width="80%" height="80%" name="grpMapa"
-			 x.GPSOK="40" y.GPSOK="10">
-		<tilemap:TilemapComponent name="Mapa" id="WMBMapa" width="100%" height="100%" includeIn="GPSOK"
-								  key="Fmjtd%7Cluurnuubng%2C8w%3Do5-9wrxga"/>
+	<s:Group id="grpMap" includeIn="GPSOK" width="90%" height="80%" name="grpMapa"
+	left="20" right="20" top="5" bottom="5">
+	<tilemap:TilemapComponent name="Mapa" id="WMBMapa" width="100%" height="100%" includeIn="GPSOK"
+	key="Fmjtd%7Cluurnuubng%2C8w%3Do5-9wrxga"
+	top="5" bottom="5" left="5" right="5"/>
 	</s:Group>
-	<!--descomentar apos testes
-	<s:Button id="btnGetCoordinates" x="48" y="574" width="80%" height="100" label="WHERES MY BUS"
-	click="btnGetCoordinates_clickHandler(event)"
-	excludeFrom="GPSNOK"/>-->
-	
-	<s:Button id="btnGetCoordinates" excludeFrom="GPSNOK" x="48" y="523" width="120" height="75"
-			  label="ME?" click="btnGetCoordinates_clickHandler(event)"
-			  />
-	<s:Button id="btnGetBusCoordinates"  excludeFrom="GPSNOK" x="172" y="523" width="120" height="75"
-			  label="Bus?" click="btnGetBusCoordinates_clickHandler(event)"/>
-	<s:Button id="btnSwitchState"  excludeFrom="GPSNOK" x="299" y="523" width="120" height="75"
-			  label="Switch" click="btnSwitchState_clickHandler(event)"/>
-	
-	
-	<!--<s:Button id="btnDummyBus"  x="165" y="575" width="150" height="100"
-			  label="MapBus?" click="btnDummyBus_clickHandler(event)" excludeFrom="NOCAP" />
-	<s:Button id="btnDummyBusTextMode" includeIn="GPSNOK,GPSNOK,NOCAP" x="323" y="576" width="150"
-			  height="100" label="TpBus?" click="btnDummyBusTextMode_clickHandler(event)"
-			  x.NOCAP="321" y.NOCAP="574"/>-->
+	<s:Group width="90%" bottom="5" left="5" right="5" height="10%">
+	<s:layout>
+	<s:TileLayout horizontalGap="5" verticalGap="5" paddingTop="5" paddingLeft="15" paddingRight="15"/>
+	</s:layout>
+	<s:Button id="btnGetCoordinates" excludeFrom="GPSNOK" x="48" y="523" width="120" 
+	label="ME?" click="btnGetCoordinates_clickHandler(event)"
+	height="40"/>
+	<s:Button id="btnGetCoordinatesNoService" excludeFrom="GPSNOK" x="48" y="569" width="120"
+	height="40" label="MENS" click="btnGetCoordinatesNoService_clickHandler(event)"
+	/>
+	<s:Button id="btnGetBusCoordinates" excludeFrom="GPSNOK" x="172" y="523" width="120" 
+	label="Bus?" click="btnGetBusCoordinates_clickHandler(event)"
+	height="40"/>
+	<s:Button id="btnGetBusNoService" excludeFrom="GPSNOK" x="173" y="568" width="120" height="40"
+	label="BusNS" click="btnGetBusNoService_clickHandler(event)"/>
+	<s:Button id="btnSwitchState" excludeFrom="GPSNOK" x="299" y="523" width="120" height="75"
+	label="Switch" click="btnSwitchState_clickHandler(event)"
+	height.GPSOK="40"/>
+	</s:Group>-->
+	<!-- uncomment after tests-->
 	
 	
 	

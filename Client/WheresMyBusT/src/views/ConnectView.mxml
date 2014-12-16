@@ -73,13 +73,41 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
+	<s:layout>
+		<s:ConstraintLayout>
+			<s:constraintColumns>
+				<s:ConstraintColumn id="leftPaddingColumn" width="5"/>
+				<s:ConstraintColumn id="iconColumn" width="32"/>
+				<s:ConstraintColumn id="middleGapColumn" width="3"/>
+				<s:ConstraintColumn id="textColumn" width="100%"/>
+				<s:ConstraintColumn id="rightPaddingColumn" width="5"/>
+			</s:constraintColumns>
+			<s:constraintRows>
+				<s:ConstraintRow id="topPaddingRow" height="10"/>
+				<s:ConstraintRow id="firstRow" height="16"/>
+				<s:ConstraintRow id="secondRow" height="16"/>
+				<s:ConstraintRow id="bottomPaddingRow" height="10"/>
+			</s:constraintRows>
+		</s:ConstraintLayout>
+	</s:layout>
 	
-	
-	<s:Group width="95%" height="95%" top="5" bottom="5" left="25" right="25">
-		<s:TextArea id="txtANOGPS" top="10" left="10" right="10" bottom="100" 
+	<s:Group width="100%" height="100%" top="10" bottom="10" left="10" right="10">
+		
+		
+			<!--<s:TextArea id="txtANOGPS" top="10" left="10" right="10" bottom="100" 
+						editable="false" verticalScrollPolicy="auto"
+						horizontalScrollPolicy="auto" width="95%" height="80%"/>-->
+		
+		<s:TextArea id="txtANOGPS" left="iconColumn:0" top="firstRow:5" 
 					editable="false" verticalScrollPolicy="auto"
-					horizontalScrollPolicy="auto"/>
-		<s:Button id="btnTesteConnect" x="99" y="502" width="219"
-				  click="btnTesteConnect_clickHandler(event)" label="Remote Status"/>
+					horizontalScrollPolicy="auto" width="95%" height="80%"/>
+			<!--<s:Button id="btnTesteConnect" left="50"
+					  click="btnTesteConnect_clickHandler(event)" label="Remote Status"/>-->
+		<s:Button id="btnTesteConnect" 
+				  click="btnTesteConnect_clickHandler(event)" 
+				  left="textColumn:0" right="textColumn:0" bottom="secondRow:2"
+				  label="Online?"/>
+	
+		
 	</s:Group>
 </s:View>

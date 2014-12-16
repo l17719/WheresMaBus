@@ -3,9 +3,10 @@
 			   xmlns:s="library://ns.adobe.com/flex/spark"
 			   xmlns:mx="library://ns.adobe.com/flex/mx"
 			   width="800" height="600" backgroundAlpha="0.41"
-			   backgroundColor="#6666FF"
+			   backgroundColor="#c8c8d8"
 			   contentCreationComplete="WMB_contentCreationCompleteHandler(event)">
 	<fx:Style source="WMB.css"/>
+	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
@@ -29,7 +30,7 @@
 	<fx:Script>
 		<![CDATA[
 			import mx.events.FlexEvent;
-			
+			import flash.net.navigateToURL;
 			
 			
 			protected function WMB_contentCreationCompleteHandler(event:FlexEvent):void
@@ -45,4 +46,6 @@
 	<s:BitmapImage id="bitimgQR" x="285" y="107" width="250" height="250" smooth="true"
 				   smoothingQuality="high" source="Assets/qrcode.png"/>
 	<s:Label id="phoneNumberLabel" x="208" y="421" fontSize="36" text="UNDER CONSTRUCTION"/>
+	<mx:LinkButton id="lnkButton" x="361" y="463" label="Download"
+				   click="navigateToURL(new URLRequest('http://tudoemcasa.no-ip.info:8080/Web/files/WheresMyBus.apk'), 'quote')"/>
 </s:Application>

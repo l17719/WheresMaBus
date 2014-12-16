@@ -5,7 +5,7 @@
 		xmlns:comp="Componentes.*"
 		title="Mapa"
 		creationComplete="Mapa_contentCreationCompleteHandler(event)"
-		destructionPolicy="auto"
+		destructionPolicy="never"
 		>
 	
 	<s:states>
@@ -781,8 +781,8 @@
 			<s:Button id="btnGetBusCoordinates" excludeFrom="GPSNOK"  width="120" 
 					  label="Bus?" click="btnGetBusCoordinates_clickHandler(event)"
 					  height="40" />
-			<s:Button id="btnGetBusNoService" excludeFrom="GPSNOK"  width="120" height="40"
-					  label="BusNS" click="btnGetBusNoService_clickHandler(event)"/>
+			<!--<s:Button id="btnGetBusNoService" excludeFrom="GPSNOK"  width="120" height="40"
+					  label="BusNS" click="btnGetBusNoService_clickHandler(event)"/>-->
 			<!--<s:Button id="btnSwitchState" excludeFrom="GPSNOK"  width="120" height="40"
 			label="Switch" click="btnSwitchState_clickHandler(event)"
 			/>-->
